@@ -33,7 +33,8 @@
 
 
 ## 二、关键指标
-
+<div align="center">
+  
 | 指标 | 数值 | 说明 |
 |---|---|---|
 | 主控MCU | STM32F407VGT6 | 168MHz Cortex-M4F, 1MB Flash, 192KB RAM |
@@ -46,6 +47,7 @@
 | 母线电压 | 24V DC | 最大不失真相电压 = 24/√3 = 13.86V |
 | 通信协议 | VOFA+ JustFloat | 921600bps，DMA非阻塞 |
 
+</div>
 
 
 ## 三、硬件平台
