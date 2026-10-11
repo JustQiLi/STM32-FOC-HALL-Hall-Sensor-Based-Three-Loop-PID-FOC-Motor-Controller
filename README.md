@@ -52,6 +52,8 @@
 本系统硬件使用 ** 硬石科技** YS-F4Pro开发板 、驱动板以及直流无刷（BLDC）电机。
 <img width="629" height="419" alt="image" src="https://github.com/user-attachments/assets/73cef411-d190-4042-bee5-030ac57af112" />
 <img width="1139" height="665" alt="image" src="https://github.com/user-attachments/assets/f54b8087-0b16-472f-9381-cc8442d6242b" />
+BLDC电机参数如图所示：
+<img width="382" height="398" alt="image" src="https://github.com/user-attachments/assets/c26e3004-fc7d-4df9-b572-be4989620c1c" />
 硬件原理图见上传文件夹，此处不做展示。
 ### 3.1 硬件清单
 
