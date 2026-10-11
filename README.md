@@ -16,6 +16,8 @@
 > 使用自定义的 QiLi FOC 算法库（包括传统 SVPWM 以及零序注入法）。
 > 支持 VOFA+ 在线调参与实时遥测。
 
+**详细原理推导可参考飞书文档：**
+***https://jcnraaa979g5.feishu.cn/wiki/LYqFwecP8ie383kMJWmc8ymVnXc?from=from_copylink***
 
 
 ---
