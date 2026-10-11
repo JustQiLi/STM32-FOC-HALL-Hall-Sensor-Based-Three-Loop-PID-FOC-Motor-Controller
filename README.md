@@ -13,6 +13,20 @@
 > 支持 VOFA+ 在线调参与实时遥测。
 
 ---
+## 系统架构总览
+### 完整工程框图
+
+<div align="center">
+<img width="1200" height="1060" alt="image" src="https://github.com/user-attachments/assets/ae61f825-9b28-4dbd-b9a2-1082334429d5" />
+  
+</div>
+
+### Hall 电角度、机械角、PLL 与 FOC 的关系
+
+<div align="center">
+<img width="1200" height="1030" alt="image" src="https://github.com/user-attachments/assets/a881fb39-7977-4842-b427-e9716ef1679d" />
+  
+</div>
 
 ## 一、项目亮点
 
