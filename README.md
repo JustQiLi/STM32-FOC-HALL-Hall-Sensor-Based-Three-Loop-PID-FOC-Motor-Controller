@@ -2,13 +2,17 @@
 
 ## 基于霍尔传感器的三环 PID 控制系统
 
-> 基于 STM32F407 的 20kHz 电流环 / 1kHz 速度环 / 200Hz 位置环三轴串级 FOC 实现，支持**转矩 / 速度 / 位置三模式**在线切换。
-> 仅用 **三路霍尔传感器** 完成转矩模式电流环跟踪偏差 < 0.005A ，速度模式 5–3600 rpm 全区间速度闭环（±1.5%），实测稳定区间100-3000rpm，速度过低会较明显抖动，位置模式正向到位精度 < 1.5°，
-> 内置 **18 项补偿机制**（摩擦前馈 / 死区补偿 / 角度助推 / PLL 观测器 / 抗积分饱和等），
-> 使用自定义的QiLi FOC算法库（包括传统SVPWM以及零序注入法），
+> 基于 STM32F407 的 **20kHz 电流环 / 1kHz 速度环 / 200Hz 位置环**三轴串级 FOC 实现，支持**转矩 / 速度 / 位置三模式**在线切换。
+>
+> 仅用 **三路霍尔传感器** 完成转矩模式电流环跟踪偏差 < 0.005A，速度模式 5–3600 rpm 全区间速度闭环（±1.5%），实测稳定区间100-3000rpm，速度过低会较明显抖动，位置模式正向到位精度 < 1.5°。
+>
+> 内置 **18 项补偿机制**（摩擦前馈 / 死区补偿 / 角度助推 / PLL 观测器 / 抗积分饱和等）。
+>
+> 使用自定义的QiLi FOC算法库（包括传统SVPWM以及零序注入法）。
+>
 > 支持 VOFA+ 在线调参与实时遥测。
 
-
+---
 
 ## 一、项目亮点
 
@@ -31,10 +35,12 @@
 - **二进制帧相位锁定**：自定义JustFloat协议解析器，通过连续帧尾匹配实现相位锁定，支持丢帧重同步
 - **安全采集脚本**：Python脚本实时监控转速/电流，超过阈值自动发停机命令，硬件调试零风险
 
+---
 
 ## 二、关键指标
+
 <div align="center">
-  
+
 | 指标 | 数值 | 说明 |
 |---|---|---|
 | 主控MCU | STM32F407VGT6 | 168MHz Cortex-M4F, 1MB Flash, 192KB RAM |
@@ -49,29 +55,38 @@
 
 </div>
 
+---
 
 ## 三、硬件平台
-本系统硬件使用 ** 硬石科技** YS-F4Pro开发板 、驱动板以及直流无刷（BLDC）电机。
 
+本系统硬件使用 **硬石科技** YS-F4Pro开发板、驱动板以及直流无刷（BLDC）电机。
+
+<div align="center">
 <img width="1139" height="665" alt="image" src="https://github.com/user-attachments/assets/f54b8087-0b16-472f-9381-cc8442d6242b" />
+</div>
+
 <div align="center">
 <img width="629" height="419" alt="image" src="https://github.com/user-attachments/assets/73cef411-d190-4042-bee5-030ac57af112" />
 </div>
+
 BLDC电机参数如图所示：
+
 <div align="center">
 <img width="382" height="398" alt="image" src="https://github.com/user-attachments/assets/c26e3004-fc7d-4df9-b572-be4989620c1c" />
 </div>
+
 硬件原理图见上传文件夹，此处不做展示。
 
 ### 3.1 硬件清单
+
 <div align="center">
-  
+
 | 部件 | 型号/参数 | 说明 |
 |---|---|---|
 | 主控MCU | STM32F407VGT6 | 168MHz Cortex-M4F, 1MB Flash, 192KB RAM |
-| 电机 | <!-- TODO: 请补充电机具体型号，例如：大疆M3508 / 5010无刷电机 --> | 4极对三相永磁同步电机/BLDC，额定功率 <!-- TODO: 请补充 --> W |
+| 电机 | 硬石科技配套BLDC电机 | 4极对三相永磁同步电机/BLDC |
 | 位置反馈 | 三路霍尔传感器 | 内置电机，24边沿/机械圈，15°机械角分辨率 |
-| 功率驱动 | <!-- TODO: 请补充驱动芯片/模块型号，例如：DRV8301 / IR2104半桥×3 --> | 三相逆变器，死区时间357ns |
+| 功率驱动 | 硬石YS-F4Pro驱动板 | 三相逆变器，死区时间357ns |
 | 电流采样 | 三相分流电阻 + 运放 | Rs=0.02Ω, Gain=4.023, 12位ADC |
 | 母线电压 | 24V DC | 最大不失真相电压=13.86V |
 | PWM定时器 | TIM8 中心对齐模式 | ARR=4199, 20kHz PWM, 互补输出+死区 |
@@ -82,8 +97,9 @@ BLDC电机参数如图所示：
 </div>
 
 ### 3.2 引脚连接表
+
 <div align="center">
-  
+
 | MCU引脚 | 功能 | 连接 |
 |---|---|---|
 | PI5 / PH13 | TIM8_CH1 / CH1N | U相上桥 / 下桥驱动 |
@@ -99,6 +115,8 @@ BLDC电机参数如图所示：
 
 </div>
 
+---
+
 ## 四、软件架构
 
 ### 4.1 三环串级控制架构
@@ -113,7 +131,6 @@ BLDC电机参数如图所示：
 ```
 
 ### 4.2 控制节拍
-<div align="center">
 
 | 控制环 | 频率 | 实现方式 | 周期 |
 |---|---|---|---|
@@ -121,8 +138,6 @@ BLDC电机参数如图所示：
 | 速度环 | 1 kHz | 电流环内分频（`SPEED_LOOP_DIV=20`） | 1ms |
 | 位置环 | 200 Hz | 电流环内分频（`POS_LOOP_DIV=100`） | 5ms |
 | VOFA遥测 | 可变 | 状态机内调用，DMA非阻塞发送 | 取决于帧长 |
-
-</div>
 
 ### 4.3 上电状态机
 
@@ -136,6 +151,7 @@ ALIGN(0°定位, 1s, Id=0.5A)
 
 ### 4.4 目录结构
 
+```
 STM32-FOC-HALL/
 ├── Algorithm/              # 控制算法核心
 │   ├── Inc/
@@ -203,7 +219,7 @@ STM32-FOC-HALL/
 └── docs/                   # 参考文档（可选）
 ```
 
-
+---
 
 ## 五、核心补偿机制详解
 
@@ -225,14 +241,14 @@ STM32-FOC-HALL/
 - **做了什么**：将三级串联一阶低通滤波器的系数从0.2改为0.4。
 - **解决了什么问题**：原系数0.2对应极点≈710Hz，三级串联在300Hz电流环带宽上吃掉约69°相位，相位裕度只剩十几度，容易引发电流环振荡。改为0.4后极点≈1.6kHz，相位损失减半。
 - **参数**：`CURR_FILTER_ALPHA=0.40`
-- **代码位置**：`Users/Inc/Motor_Config.h:121`，加载点在`Users/Src/StateMachine.c`初始化段
+- **代码位置**：`Users/Inc/Motor_Config.h`，加载点在`Users/Src/StateMachine.c`初始化段
 
 #### 5.1.3 零极点对消法电流环整定
 
 - **做了什么**：不用手调，直接用电机的实际相电阻R和相电感L计算PI参数：Kp = L·ωc·2π，Ki = R·ωc·2π，电流环带宽设为300Hz。
 - **解决了什么问题**：手动整定PI参数困难，且难以保证相位裕度；用电机物理参数直接定标，一次到位。
 - **参数**：MOTOR_R=0.415Ω，MOTOR_L=1.24mH → Kp=2.34，Ki=782.3
-- **代码位置**：`Users/Inc/Motor_Config.h:119-124`
+- **代码位置**：`Users/Inc/Motor_Config.h`
 - **实测效果**：电流环跟踪偏差<0.005A。
 
 #### 5.1.4 输出限幅 / 抗积分饱和
@@ -254,7 +270,7 @@ STM32-FOC-HALL/
   - 刚脱开静摩擦时保留`RELEASE_A=0.35A`，80ms平滑降至动摩擦电流，防止转矩突降导致再次停转
   - `BRAKE`（超速）：关闭补偿，交给自然摩擦减速
 - **解决了什么问题**：静摩擦门槛约0.15–0.40A，开环实测0.10–0.16A全部是"粘住→突跳"的粘滑状态。传统PI在低速时要么力矩不足（粘住不动），要么积分饱和（突跳过冲→刹回→振荡）。四状态前馈在PI出力之前就把静摩擦"填平"，PI只负责动态调节。
-- **参数**：`SPEED_FRICTION_STATIC_A=0.75`，`KINETIC_A=0.15`，`RELEASE_A=0.35`，`START_A=0.50`，`RAMP_MS=150`，`RELEASE_MS=80`
+- **参数**：`SPEED_FRICTION_STATIC_A=0.75`，`KINETIC_A=0.15`，`RELEASE_A=0.35`，`START_A=0.50`
 - **代码位置**：`PID_FrictionFeedforward()` in `Algorithm/Src/PID.c`
 - **实测效果**：50rpm稳态Iq从修复前的0.79A（低速钳制用满）降至0.19A，无过冲振荡。
 
@@ -269,16 +285,16 @@ STM32-FOC-HALL/
 #### 5.2.3 丢边沿衰减处理
 
 - **做了什么**：丢边沿后分两支处理：有助推请求时按±W_CREEP推进估算角；无请求时按60rad/s²线性衰减到0（不直接清零），且助推期故意不夹60°扇区，让估算角开环越过边界产生新边沿。
-- **解决了什么问题**：旧代码丢边沿后直接清零估算角速度→角度冻结→自锁（源码注释自证）。线性衰减保证角度平滑过渡，不会突然冻死。
-- **参数**：`HALL_LOST_DECAY_RS=60.0rad/s²`，超时阈值`HALL_EDGE_LOST_RATIO=3`
-- **代码位置**：`BSP/Src/bsp_encoder.c:931-961`
+- **解决了什么问题**：旧代码丢边沿后直接清零估算角速度→角度冻结→自锁。线性衰减保证角度平滑过渡，不会突然冻死。
+- **参数**：`HALL_LOST_DECAY_RS=60.0rad/s²`
+- **代码位置**：`BSP/Src/bsp_encoder.c`
 
 #### 5.2.4 转矩抬底
 
 - **做了什么**：堵转状态下且目标|iq|<FLOOR时，实际输出电流抬到0.50A（大于齿槽/静摩擦临界值约0.40A），转子启动(>30rpm)后回到用户目标值。
 - **解决了什么问题**：小目标下速度环PI输出的电流不足以克服静摩擦起转，转子一直粘在原地。
 - **参数**：`CURR_BOOST_FLOOR_A=0.50`，迟滞`RPM_IN=10`/`RPM_OUT=30`
-- **代码位置**：`Users/Src/StateMachine.c:458-469`
+- **代码位置**：`Users/Src/StateMachine.c`
 
 #### 5.2.5 ⭐ PLL转速观测器
 
@@ -292,14 +308,14 @@ STM32-FOC-HALL/
 
 - **做了什么**：PLL输出每帧变化量钳位在±300rpm（真实物理上限≈170rpm/帧）。
 - **解决了什么问题**：霍尔换相瞬间角度台阶造成转速尖峰，速度环不应对台阶做过激响应。
-- **代码位置**：`Users/Src/StateMachine.c:329-331`
+- **代码位置**：`Users/Src/StateMachine.c`
 
 #### 5.2.7 低速禁反向制动
 
 - **做了什么**：200rpm以下同向运行时不输出反向制动Iq，交给自然摩擦减速。
 - **解决了什么问题**：低速下反馈抖动会让PI发出反向电流，把电机刹停并进入振荡。
 - **参数**：`SPEED_NO_BRAKE_RPM=200.0`
-- **代码位置**：`Algorithm/Src/PID.c:394-421`
+- **代码位置**：`Algorithm/Src/PID.c`
 
 #### 5.2.8 抗积分饱和（非对称钳制）
 
@@ -308,7 +324,7 @@ STM32-FOC-HALL/
   - 负向钳制：`SPEED_IQ_NEG_LIM_A/Ki = 0.50/0.01 = 50`（刹车后积分最深-0.50A，恢复期仍有正向保持力矩，无转矩真空）
   - 低速正向钳制：`(0.15 + 0.0008×目标转速)/Ki`（仅目标转速≤200rpm，防止小目标时积分瞬间给满）
 - **解决了什么问题**：小目标时积分无上限瞬间给满2A，导致过冲-刹回振荡；非对称钳制保证刹车后仍有正向保持力矩。
-- **代码位置**：`Algorithm/Src/PID.c:367-385`
+- **代码位置**：`Algorithm/Src/PID.c`
 - **实测效果**：阶跃响应无明显超调。
 
 #### 5.2.9 Iq指令斜率限幅
@@ -316,7 +332,7 @@ STM32-FOC-HALL/
 - **做了什么**：速度环输出的Iq指令变化率限制在100A/s。
 - **解决了什么问题**：指令跳变引起机械冲击和估算角跟不上。
 - **参数**：`SPEED_IQ_SLEW_A_S=100A/s`
-- **代码位置**：`Algorithm/Src/PID.c:458-462`
+- **代码位置**：`Algorithm/Src/PID.c`
 
 ---
 
@@ -327,7 +343,7 @@ STM32-FOC-HALL/
 - **做了什么**：位置环指令≥10rpm（对应位置误差≥~2.9°）且转子静止时，Iq抬底到0.65A破障；转子启动后撤除交回速度环。
 - **解决了什么问题**：位置阶跃时速度环输出力矩不足以跨过齿槽，转子停在目标附近不动。
 - **参数**：`POS_BOOST_A=0.65`，`POS_BOOST_CMD_RPM=10`，迟滞`RPM_IN=10`/`RPM_OUT=30`
-- **代码位置**：`Algorithm/Src/PID.c:440-456`
+- **代码位置**：`Algorithm/Src/PID.c`
 
 #### 5.3.2 单圈绝对角 + 最短路径误差
 
@@ -339,7 +355,7 @@ STM32-FOC-HALL/
 
 - **做了什么**：切入位置模式时将低通滤波器状态和输出prev值对齐到当前真值。
 - **解决了什么问题**：ST-LINK烧录复位不清SRAM，static变量残留会造成启动猛冲。
-- **代码位置**：`Users/Src/StateMachine.c:473-480`
+- **代码位置**：`Users/Src/StateMachine.c`
 
 #### 5.3.4 位置输出斜率限制
 
@@ -356,7 +372,6 @@ STM32-FOC-HALL/
 - **代码位置**：`Users/Src/StateMachine.c`
 
 ---
-
 
 ## 六、三模式功能说明
 
@@ -387,13 +402,13 @@ STM32-FOC-HALL/
 
 ---
 
-
 ## 七、实测数据
 
 > 数据采集环境：COM12 @ 921600bps，24V母线，空载，当前固件（含低速助推修复+霍尔边沿修复）。
 > 真值转速由电角度净转数法折算，不依赖固件反馈通道。
 
 ### 7.1 速度模式跟踪精度（核心数据表）
+
 <div align="center">
 
 | 指令(rpm) | 实测真值(rpm) | 达成率 | 稳态Iq(A) | 状态 |
@@ -413,6 +428,7 @@ STM32-FOC-HALL/
 > **结论**：200–3000rpm全区间稳态误差<2.5%；3000rpm仅需0.33A（占电流上限2A的16.5%，电流裕量充足）。50rpm档均值偏高系机械粘滑本性（瞬时转速在0–100rpm间波动），非控制缺陷。
 
 ### 7.2 转矩模式电流-转速特性
+
 <div align="center">
 
 | Iq指令(A) | Iq实测(A) | 电流偏差(A) | 实测转速(rpm) | 状态 |
@@ -427,6 +443,7 @@ STM32-FOC-HALL/
 > **结论**：0.2/0.3A档电流环跟踪偏差<0.002A；静摩擦门槛≈0.1–0.15A；空载转速平台≈3300rpm（受24V母线电压限制）。
 
 ### 7.3 位置模式阶跃响应
+
 <div align="center">
 
 | 目标(°) | 实际(°) | 误差(°) | 误差std(°) | 方向 | 状态 |
@@ -452,33 +469,28 @@ STM32-FOC-HALL/
 
 <div align="center">
 <img width="2085" height="735" alt="speed_mode_tracking" src="https://github.com/user-attachments/assets/1deda6f6-fe5b-461d-990e-db3203493f0e" />
-
 </div>
 
 - 位置模式阶跃响应：
 
 <div align="center">
 <img width="1785" height="882" alt="position_mode_response" src="https://github.com/user-attachments/assets/1069fadd-f333-479d-ab08-35108bdc2f0c" />
-
 </div>
 
 - 三模式综合评分雷达图：
 
 <div align="center">
 <img width="1167" height="948" alt="three_mode_radar" src="https://github.com/user-attachments/assets/c16785e3-3f51-47e6-9c6a-192966372157" />
-
 </div>
-
 
 ---
 
 ## 八、已知不足与改进方向
 
-
 | 序号 | 不足 | 影响 | 改进方向 |
 |:---:|---|---|---|
 | 1 | **位置模式回程不到位** | 反向运动最大误差-118.6°，Iq已达-1.05A仍无法反向转动 | 检查位置模式反向摩擦补偿的方向逻辑；适当提高`POS_RPM_MAX`；增加回程专用补偿 |
-| 2 | **电流采样固定偏置≈+0.13A** | 小电流指令时Iq实测偏高（0指令时仍报0.13–0.15A） | 运行期动态零点校准；开启扇区无效相修正（`ENABLE_SECTOR_CURR_CORRECT`） |
+| 2 | **电流采样固定偏置≈+0.13A** | 小电流指令时Iq实测偏高（0指令时仍报0.13–0.15A） | 运行期动态零点校准；开启扇区无效相修正 |
 | 3 | **速度帧缺转速通道** | 速度模式18通道中无直接rpm反馈，需从电角度推算 | 在`VOFA.c`速度分支增加`Motor_GetSpeedFB()`通道 |
 | 4 | **位置分辨率下限7.5°** | 位置稳态误差std 5–11°，受半个霍尔台阶支配 | 改用编码器/磁编码器；或增加观测器插值精度 |
 | 5 | **低速瞬时纹波±25%** | 50rpm瞬时转速波动大（均值准确） | 系机械粘滑本性，可尝试更高分辨率反馈或非线性PID |
@@ -535,19 +547,17 @@ rpm=0
 pip install pyserial matplotlib numpy pandas
 
 # 三模式综合采集（带安全保护，超限自动停机）
-python _tools/foc_three_mode_capture.py --mode 0  # 转矩模式
-python _tools/foc_three_mode_capture.py --mode 1  # 速度模式
-python _tools/foc_three_mode_capture.py --mode 2  # 位置模式
+python Python/foc_capture.py --mode 0  # 转矩模式
+python Python/foc_capture.py --mode 1  # 速度模式
+python Python/foc_capture.py --mode 2  # 位置模式
 
 # 生成分析报告和可视化图表
-python _tools/foc_analysis_report.py
+python Python/foc_analysis_report.py
 ```
 
 > 采集脚本内置安全保护：实时监控转速和电流，超过`rpm>4200`或`|Iq|>2.5A`立即发送`rpm=0`/`iq=0`并中止采集。
 
-
-
-
+---
 
 ## 十、许可证
 
@@ -556,11 +566,9 @@ python _tools/foc_analysis_report.py
 > MIT License 允许任何人自由使用、修改、分发、商用，只需保留版权声明和许可声明。
 > 适合个人开源项目，企业也可放心参考使用。
 
-
+---
 
 ## 十一、致谢与参考
----
-<!-- TODO: 如有参考的开源项目、论文、教程，在此列出 -->
 
 - STM32 HAL 库（STMicroelectronics，BSD-3-Clause License）
 - VOFA+ 上位机（https://www.vofa.plus/）
@@ -590,6 +598,8 @@ python _tools/foc_analysis_report.py
 | PLL Kp/Ki | 300 / 20000 | `kp_theta` / `ki_theta` |
 | 串口波特率 | 921600 | `usart.c` |
 
+---
+
 ## 附录 B：VOFA+ JustFloat 协议说明
 
 ### 帧结构
@@ -615,7 +625,3 @@ python _tools/foc_analysis_report.py
 | `ckp=2.34` / `cki=782` | 电流环PI增益 | `ckp=2.34` |
 | `skp=0.002` / `ski=0.01` | 速度环PI增益 | `ski=0.01` |
 | `pkp=200` / `pki=10` | 位置环PI增益 | `pkp=200` |
-
----
-
-
