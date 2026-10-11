@@ -60,6 +60,7 @@ BLDC电机参数如图所示：
 <img width="382" height="398" alt="image" src="https://github.com/user-attachments/assets/c26e3004-fc7d-4df9-b572-be4989620c1c" />
 </div>
 硬件原理图见上传文件夹，此处不做展示。
+
 ### 3.1 硬件清单
 
 | 部件 | 型号/参数 | 说明 |
