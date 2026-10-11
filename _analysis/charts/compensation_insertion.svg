@@ -1,0 +1,199 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 800" font-family="Microsoft YaHei, Arial, sans-serif">
+  <defs>
+    <marker id="arr" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+    </marker>
+    <marker id="arrRed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#dc2626"/>
+    </marker>
+  </defs>
+
+  <rect width="1300" height="800" fill="#fafafa"/>
+  <text x="650" y="38" text-anchor="middle" font-size="22" font-weight="bold" fill="#111">18 项补偿机制在控制链路中的插入位置</text>
+
+  <!-- 主控制链（从上到下：位置环→速度环→电流环→FOC→电机） -->
+  <g font-size="12" text-anchor="middle">
+    <!-- 位置环 -->
+    <rect x="450" y="70" width="180" height="50" rx="6" fill="#faf5ff" stroke="#7c3aed" stroke-width="2"/>
+    <text x="540" y="92" font-weight="bold" font-size="13">位置环 PI（200Hz）</text>
+    <text x="540" y="110">位置误差 → 速度指令</text>
+
+    <!-- 速度环 -->
+    <rect x="450" y="180" width="180" height="50" rx="6" fill="#fff7ed" stroke="#ea580c" stroke-width="2"/>
+    <text x="540" y="202" font-weight="bold" font-size="13">速度环 PI（1kHz）</text>
+    <text x="540" y="220">转速误差 → Iq 指令</text>
+
+    <!-- 电流环 -->
+    <rect x="450" y="290" width="180" height="50" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+    <text x="540" y="312" font-weight="bold" font-size="13">电流环 PI（20kHz）</text>
+    <text x="540" y="330">电流误差 → Vd/Vq</text>
+
+    <!-- 死区补偿 -->
+    <rect x="450" y="380" width="180" height="45" rx="6" fill="#fef3c7" stroke="#d97706" stroke-width="2.5"/>
+    <text x="540" y="400" font-weight="bold" font-size="13">死区电压补偿</text>
+    <text x="540" y="417">用 Theta 投影到 dq 轴</text>
+
+    <!-- FOC变换 -->
+    <rect x="450" y="460" width="180" height="50" rx="6" fill="#ecfdf5" stroke="#15803d" stroke-width="2"/>
+    <text x="540" y="482" font-weight="bold" font-size="13">FOC 变换 + SVPWM</text>
+    <text x="540" y="500">反Park → 三相电压 → CCR</text>
+
+    <!-- 电机 -->
+    <rect x="450" y="550" width="180" height="50" rx="6" fill="#fce7f3" stroke="#db2777" stroke-width="2"/>
+    <text x="540" y="572" font-weight="bold" font-size="13">BLDC 电机</text>
+    <text x="540" y="590">三相逆变器驱动</text>
+  </g>
+
+  <!-- 主链箭头 -->
+  <g stroke="#333" stroke-width="2.5" fill="none">
+    <line x1="540" y1="120" x2="540" y2="178" marker-end="url(#arr)"/>
+    <line x1="540" y1="230" x2="540" y2="288" marker-end="url(#arr)"/>
+    <line x1="540" y1="340" x2="540" y2="378" marker-end="url(#arr)"/>
+    <line x1="540" y1="425" x2="540" y2="458" marker-end="url(#arr)"/>
+    <line x1="540" y1="510" x2="540" y2="548" marker-end="url(#arr)"/>
+  </g>
+
+  <!-- 反馈箭头 -->
+  <path d="M 630 575 L 700 575 L 700 100 L 632 95" stroke="#666" stroke-width="1.5" stroke-dasharray="5,3" fill="none" marker-end="url(#arr)"/>
+  <text x="720" y="340" font-size="11" fill="#666" transform="rotate(90,720,340)">反馈：电流/转速/位置</text>
+
+  <!-- ========== 位置环补偿（左侧） ========== -->
+  <g font-size="11" text-anchor="middle">
+    <rect x="30" y="60" width="170" height="42" rx="5" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+    <text x="115" y="78" font-weight="bold">⑤ 位置专用助推</text>
+    <text x="115" y="94">3rad/s 独立蠕动通道</text>
+
+    <rect x="30" y="112" width="170" height="42" rx="5" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+    <text x="115" y="130" font-weight="bold">① 破静摩擦启动补偿</text>
+    <text x="115" y="146">Iq 抬底 0.65A 破障</text>
+
+    <rect x="30" y="164" width="170" height="42" rx="5" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+    <text x="115" y="182" font-weight="bold">② 单圈绝对角+最短路径</text>
+    <text x="115" y="198">fmod 归一化，防饱和乱推</text>
+
+    <rect x="30" y="216" width="170" height="42" rx="5" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+    <text x="115" y="234" font-weight="bold">③ 位置反馈低通+切入重置</text>
+    <text x="115" y="250">防 static 残留导致猛冲</text>
+
+    <rect x="30" y="268" width="170" height="42" rx="5" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+    <text x="115" y="286" font-weight="bold">④ 位置输出斜率限制</text>
+    <text x="115" y="302">2rpm/5ms，防机械冲击</text>
+  </g>
+
+  <!-- 位置环补偿连线 -->
+  <g stroke="#d97706" stroke-width="1.5" stroke-dasharray="4,2" fill="none">
+    <line x1="200" y1="81" x2="448" y2="90" marker-end="url(#arrRed)"/>
+    <line x1="200" y1="133" x2="448" y2="95" marker-end="url(#arrRed)"/>
+    <line x1="200" y1="185" x2="448" y2="100" marker-end="url(#arrRed)"/>
+    <line x1="200" y1="237" x2="448" y2="105" marker-end="url(#arrRed)"/>
+    <line x1="200" y1="289" x2="448" y2="110" marker-end="url(#arrRed)"/>
+  </g>
+
+  <!-- ========== 速度环补偿（右侧） ========== -->
+  <g font-size="11" text-anchor="middle">
+    <rect x="720" y="150" width="180" height="42" rx="5" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+    <text x="810" y="168" font-weight="bold">① 摩擦前馈状态机 ⭐</text>
+    <text x="810" y="184">REST→MOVING→BRAKE 四态</text>
+
+    <rect x="720" y="202" width="180" height="42" rx="5" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+    <text x="810" y="220" font-weight="bold">② 角度助推（I/F蠕动）⭐</text>
+    <text x="810" y="236">10rad/s 蠕动，防低速锁死</text>
+
+    <rect x="720" y="254" width="180" height="42" rx="5" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+    <text x="810" y="272" font-weight="bold">③ 丢边沿衰减处理</text>
+    <text x="810" y="288">60rad/s² 衰减，不直接清零</text>
+
+    <rect x="720" y="306" width="180" height="42" rx="5" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+    <text x="810" y="324" font-weight="bold">④ 转矩抬底</text>
+    <text x="810" y="340">堵转时 Iq 抬到 0.50A</text>
+
+    <rect x="720" y="358" width="180" height="42" rx="5" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+    <text x="810" y="376" font-weight="bold">⑤ PLL 转速观测器 ⭐</text>
+    <text x="810" y="392">二阶PLL跟踪机械角→平滑转速</text>
+
+    <rect x="930" y="150" width="170" height="42" rx="5" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+    <text x="1015" y="168" font-weight="bold">⑥ PLL输出速率钳位</text>
+    <text x="1015" y="184">±300rpm/帧，钳换相尖峰</text>
+
+    <rect x="930" y="202" width="170" height="42" rx="5" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+    <text x="1015" y="220" font-weight="bold">⑦ 低速禁反向制动</text>
+    <text x="1015" y="236">200rpm以下不输出反向Iq</text>
+
+    <rect x="930" y="254" width="170" height="42" rx="5" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+    <text x="1015" y="272" font-weight="bold">⑧ 抗积分饱和（非对称）</text>
+    <text x="1015" y="288">三重钳制，防过冲振荡</text>
+
+    <rect x="930" y="306" width="170" height="42" rx="5" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+    <text x="1015" y="324" font-weight="bold">⑨ Iq指令斜率限幅</text>
+    <text x="1015" y="340">100A/s，防指令跳变冲击</text>
+  </g>
+
+  <!-- 速度环补偿连线 -->
+  <g stroke="#d97706" stroke-width="1.5" stroke-dasharray="4,2" fill="none">
+    <line x1="720" y1="171" x2="632" y2="195" marker-end="url(#arrRed)"/>
+    <line x1="720" y1="223" x2="632" y2="200" marker-end="url(#arrRed)"/>
+    <line x1="720" y1="275" x2="632" y2="205" marker-end="url(#arrRed)"/>
+    <line x1="720" y1="327" x2="632" y2="210" marker-end="url(#arrRed)"/>
+    <line x1="720" y1="379" x2="632" y2="215" marker-end="url(#arrRed)"/>
+    <line x1="930" y1="171" x2="632" y2="220" marker-end="url(#arrRed)"/>
+    <line x1="930" y1="223" x2="632" y2="225" marker-end="url(#arrRed)"/>
+    <line x1="930" y1="275" x2="632" y2="230" marker-end="url(#arrRed)"/>
+    <line x1="930" y1="327" x2="632" y2="235" marker-end="url(#arrRed)"/>
+  </g>
+
+  <!-- ========== 电流环补偿（左侧下方） ========== -->
+  <g font-size="11" text-anchor="middle">
+    <rect x="30" y="370" width="170" height="42" rx="5" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+    <text x="115" y="388" font-weight="bold">① 死区电压补偿 ⭐</text>
+    <text x="115" y="404">0.171V，用Theta投影dq轴</text>
+
+    <rect x="30" y="422" width="170" height="42" rx="5" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+    <text x="115" y="440" font-weight="bold">② 电流采样滤波整定</text>
+    <text x="115" y="456">alpha=0.4，极点1.6kHz</text>
+
+    <rect x="30" y="474" width="170" height="42" rx="5" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+    <text x="115" y="492" font-weight="bold">③ 零极点对消法整定</text>
+    <text x="115" y="508">Kp=2.34, Ki=782.3, 300Hz</text>
+
+    <rect x="30" y="526" width="170" height="42" rx="5" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+    <text x="115" y="544" font-weight="bold">④ 输出限幅/抗积分饱和</text>
+    <text x="115" y="560">13.856V (Udc/√3)</text>
+  </g>
+
+  <!-- 电流环补偿连线 -->
+  <g stroke="#d97706" stroke-width="1.5" stroke-dasharray="4,2" fill="none">
+    <line x1="200" y1="391" x2="448" y2="395" marker-end="url(#arrRed)"/>
+    <line x1="200" y1="443" x2="448" y2="305" marker-end="url(#arrRed)"/>
+    <line x1="200" y1="495" x2="448" y2="310" marker-end="url(#arrRed)"/>
+    <line x1="200" y1="547" x2="448" y2="315" marker-end="url(#arrRed)"/>
+  </g>
+
+  <!-- 角度获取模块（底部） -->
+  <rect x="350" y="640" width="380" height="60" rx="8" fill="#ecfdf5" stroke="#15803d" stroke-width="2"/>
+  <text x="540" y="665" text-anchor="middle" font-size="13" font-weight="bold">角度获取链（霍尔 → s_hall_ang → Theta → 机械角）</text>
+  <text x="540" y="687" text-anchor="middle" font-size="11" fill="#166534">Theta 用于：Park变换 / 反Park变换 / 死区补偿 ｜ 机械角用于：位置环反馈 / PLL输入</text>
+
+  <line x1="540" y1="640" x2="540" y2="602" stroke="#15803d" stroke-width="2" stroke-dasharray="4,2" fill="none" marker-end="url(#arr)"/>
+
+  <!-- 图例 -->
+  <rect x="780" y="440" width="480" height="140" rx="8" fill="#fff" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="800" y="465" font-size="13" font-weight="bold" fill="#111">补偿与角度的关系分类</text>
+  <g font-size="11">
+    <rect x="800" y="478" width="16" height="14" rx="2" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+    <text x="825" y="490">补偿机制模块（共18项）</text>
+
+    <rect x="800" y="500" width="16" height="14" rx="2" fill="#ecfdf5" stroke="#15803d" stroke-width="1.5"/>
+    <text x="825" y="512">角度获取 / FOC 核心模块</text>
+
+    <text x="800" y="538" fill="#dc2626" font-weight="bold">直接使用角度 Theta：</text>
+    <text x="815" y="554">死区电压补偿（投影相电流符号到dq轴）</text>
+
+    <text x="800" y="574" fill="#dc2626" font-weight="bold">间接修改估算角：</text>
+    <text x="815" y="590">角度助推、丢边沿衰减（修改 s_angle_spd → s_hall_ang → Theta）</text>
+  </g>
+
+  <!-- 底部统计 -->
+  <rect x="30" y="720" width="1240" height="65" rx="8" fill="#1f2937" stroke="#111827" stroke-width="2"/>
+  <text x="650" y="748" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff">18 项补偿分布：电流环 4 项 + 速度环 9 项 + 位置环 5 项</text>
+  <text x="650" y="772" text-anchor="middle" font-size="12" fill="#d1d5db">与角度直接相关：死区补偿(用Theta) + 角度助推/丢边沿衰减(改估算角) + PLL(用机械角) ｜ 其余作用在 Iq 指令/转速/电流环参数上</text>
+</svg>

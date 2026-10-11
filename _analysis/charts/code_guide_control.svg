@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img">
+<rect width="1200" height="100%" fill="white"/>
+<text x="30" y="35" font-family="Microsoft YaHei, sans-serif" font-size="27" fill="#233247" text-anchor="start" dominant-baseline="central">控制与补偿：外环给目标，内环执行，传感器闭合反馈</text>
+<text x="30" y="78" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#68778a" text-anchor="start" dominant-baseline="central">功能数据流图；实际中断先执行电流环，再更新观测器与外环目标（见正文）。</text>
+<rect x="30" y="140" width="200" height="150" rx="12" fill="#eef5ff" stroke="#6f93c1" stroke-width="2"/>
+<text x="130.0" y="187.0" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#233247" text-anchor="middle" dominant-baseline="central">位置 PI · 200 Hz</text>
+<text x="130.0" y="215.0" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#233247" text-anchor="middle" dominant-baseline="central">位置误差 rad</text>
+<text x="130.0" y="243.0" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#233247" text-anchor="middle" dominant-baseline="central">输出速度目标 rpm</text>
+<rect x="265" y="140" width="200" height="150" rx="12" fill="#eef5ff" stroke="#6f93c1" stroke-width="2"/>
+<text x="365.0" y="187.0" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#233247" text-anchor="middle" dominant-baseline="central">速度 PI · 1 kHz</text>
+<text x="365.0" y="215.0" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#233247" text-anchor="middle" dominant-baseline="central">速度误差 rpm</text>
+<text x="365.0" y="243.0" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#233247" text-anchor="middle" dominant-baseline="central">输出转矩电流 A</text>
+<rect x="500" y="140" width="200" height="150" rx="12" fill="#fff6e8" stroke="#c89b54" stroke-width="2"/>
+<text x="600.0" y="187.0" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#233247" text-anchor="middle" dominant-baseline="central">Iq 指令整形</text>
+<text x="600.0" y="215.0" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#233247" text-anchor="middle" dominant-baseline="central">摩擦前馈 / 破障抬底</text>
+<text x="600.0" y="243.0" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#233247" text-anchor="middle" dominant-baseline="central">制动权限 / 限幅 / 斜率</text>
+<rect x="735" y="140" width="200" height="150" rx="12" fill="#eef5ff" stroke="#6f93c1" stroke-width="2"/>
+<text x="835.0" y="187.0" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#233247" text-anchor="middle" dominant-baseline="central">d/q 电流 PI</text>
+<text x="835.0" y="215.0" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#233247" text-anchor="middle" dominant-baseline="central">20 kHz · Id/Iq 反馈</text>
+<text x="835.0" y="243.0" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#233247" text-anchor="middle" dominant-baseline="central">输出 Vd/Vq + 圆限幅</text>
+<rect x="970" y="140" width="200" height="150" rx="12" fill="#eef5ff" stroke="#6f93c1" stroke-width="2"/>
+<text x="1070.0" y="187.0" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#233247" text-anchor="middle" dominant-baseline="central">电压 → PWM</text>
+<text x="1070.0" y="215.0" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#233247" text-anchor="middle" dominant-baseline="central">死区补偿 → 反 Park</text>
+<text x="1070.0" y="243.0" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#233247" text-anchor="middle" dominant-baseline="central">SVPWM → TIM8 CCR</text>
+<polyline points="230,215 265,215" fill="none" stroke="#55708c" stroke-width="2"/><polygon points="265,215 255.09508187412055,219.78462087522354 255.09508187412055,210.21537912477646" fill="#55708c"/>
+<polyline points="465,215 500,215" fill="none" stroke="#55708c" stroke-width="2"/><polygon points="500,215 490.0950818741206,219.78462087522354 490.0950818741206,210.21537912477646" fill="#55708c"/>
+<polyline points="700,215 735,215" fill="none" stroke="#55708c" stroke-width="2"/><polygon points="735,215 725.0950818741205,219.78462087522354 725.0950818741205,210.21537912477646" fill="#55708c"/>
+<polyline points="935,215 970,215" fill="none" stroke="#55708c" stroke-width="2"/><polygon points="970,215 960.0950818741205,219.78462087522354 960.0950818741205,210.21537912477646" fill="#55708c"/>
+<text x="365" y="117" font-family="Microsoft YaHei, sans-serif" font-size="16" fill="#233247" text-anchor="middle" dominant-baseline="central">速度模式：rpm 目标</text>
+<polyline points="365,96 365,140" fill="none" stroke="#55708c" stroke-width="2"/><polygon points="365,140 360.21537912477646,130.09508187412055 369.78462087522354,130.09508187412055" fill="#55708c"/>
+<text x="600" y="350" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#233247" text-anchor="middle" dominant-baseline="central">转矩模式：Id/Iq 目标 + 启动抬底</text>
+<polyline points="600,372 835,372 835,290" fill="none" stroke="#bc8534" stroke-width="2" stroke-dasharray="7 5"/><polygon points="835,290 839.7846208752235,299.9049181258794 830.2153791247765,299.9049181258794" fill="#bc8534"/>
+<rect x="970" y="460" width="200" height="115" rx="12" fill="#eff9f2" stroke="#76a184" stroke-width="2"/>
+<text x="1070.0" y="489.5" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#233247" text-anchor="middle" dominant-baseline="central">逆变器 → 电机</text>
+<text x="1070.0" y="517.5" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#233247" text-anchor="middle" dominant-baseline="central">施加三相电压</text>
+<text x="1070.0" y="545.5" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#233247" text-anchor="middle" dominant-baseline="central">产生电流 / 转矩 / 位移</text>
+<polyline points="1070,290 1070,460" fill="none" stroke="#55708c" stroke-width="2"/><polygon points="1070,460 1065.2153791247765,450.0950818741206 1074.7846208752235,450.0950818741206" fill="#55708c"/>
+<rect x="735" y="460" width="200" height="115" rx="12" fill="#eef5ff" stroke="#6f93c1" stroke-width="2"/>
+<text x="835.0" y="489.5" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#233247" text-anchor="middle" dominant-baseline="central">ADC 电流采样</text>
+<text x="835.0" y="517.5" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#233247" text-anchor="middle" dominant-baseline="central">零点校准 / 电流换算</text>
+<text x="835.0" y="545.5" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#233247" text-anchor="middle" dominant-baseline="central">低通 → Clarke → Park</text>
+<polyline points="970,517 935,517" fill="none" stroke="#55708c" stroke-width="2"/><polygon points="935,517 944.9049181258795,512.2153791247765 944.9049181258795,521.7846208752235" fill="#55708c"/>
+<polyline points="835,460 835,410 715,410 715,270 735,270" fill="none" stroke="#55708c" stroke-width="2"/><polygon points="735,270 725.0950818741205,274.78462087522354 725.0950818741205,265.21537912477646" fill="#55708c"/>
+<rect x="30" y="460" width="435" height="115" rx="12" fill="#eef5ff" stroke="#6f93c1" stroke-width="2"/>
+<text x="247.5" y="489.5" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#233247" text-anchor="middle" dominant-baseline="central">Hall 角度与速度反馈（见角度链路图）</text>
+<text x="247.5" y="517.5" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#233247" text-anchor="middle" dominant-baseline="central">机械单圈角 → 位置反馈；PLL → 速度反馈</text>
+<text x="247.5" y="545.5" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#233247" text-anchor="middle" dominant-baseline="central">Hall 电角度 → Park / 反 Park / 死区补偿</text>
+<polyline points="970,555 970,610 248,610 248,575" fill="none" stroke="#55708c" stroke-width="2"/><polygon points="248,575 252.78462087522354,584.9049181258795 243.21537912477646,584.9049181258795" fill="#55708c"/>
+<polyline points="130,460 130,290" fill="none" stroke="#55708c" stroke-width="2"/><polygon points="130,290 134.78462087522354,299.9049181258794 125.21537912477646,299.9049181258794" fill="#55708c"/>
+<polyline points="365,460 365,290" fill="none" stroke="#55708c" stroke-width="2"/><polygon points="365,290 369.78462087522354,299.9049181258794 360.21537912477646,299.9049181258794" fill="#55708c"/>
+<polyline points="465,545 490,545 490,655 1185,655 1185,260 1170,260" fill="none" stroke="#55708c" stroke-width="2" stroke-dasharray="7 5"/><polygon points="1170,260 1179.9049181258795,255.21537912477646 1179.9049181258795,264.78462087522354" fill="#55708c"/>
+<text x="645" y="643" font-family="Microsoft YaHei, sans-serif" font-size="16" fill="#233247" text-anchor="start" dominant-baseline="central">θe 接变换与死区投影（不是速度 PI 的输入）</text>
+<text x="30" y="695" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#233247" text-anchor="start" dominant-baseline="central">位置模式：位置 → 速度 → 电流；速度模式：速度 → 电流；转矩模式：直接给电流目标。</text>
+</svg>

@@ -1,0 +1,41 @@
+# ==== Keil MDK - build outputs ====
+MDK-ARM/Base_Project/
+*.axf
+*.hex
+*.bin
+*.map
+*.lnp
+*.lst
+*.dep
+*.o
+*.d
+*.crf
+*.htm
+*.build_log.htm
+*.iex
+
+# ==== Keil MDK - user / machine-specific files ====
+*.uvguix.*
+*.uvoptx.bak
+MDK-ARM/.vscode/
+
+# ==== STM32CubeIDE / VS Code - user / machine-specific files ====
+.mxproject
+.vscode/
+
+# ==== Scratch / internal working directories (not part of the published project) ====
+_tools/
+_docs/
+_patch/
+
+# ==== Internal notes ====
+调试记录*.md
+修改说明*.md
+
+# ==== Python ====
+__pycache__/
+*.pyc
+
+# ==== OS ====
+.DS_Store
+Thumbs.db

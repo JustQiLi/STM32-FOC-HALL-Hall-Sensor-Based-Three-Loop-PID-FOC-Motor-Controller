@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 560" font-family="Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arr2" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#555"/>
+    </marker>
+    <linearGradient id="gElec" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E3F2FD"/><stop offset="100%" stop-color="#90CAF9"/>
+    </linearGradient>
+    <linearGradient id="gMech" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFF3E0"/><stop offset="100%" stop-color="#FFCC80"/>
+    </linearGradient>
+    <linearGradient id="gPll" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E8F5E9"/><stop offset="100%" stop-color="#A5D6A7"/>
+    </linearGradient>
+    <linearGradient id="gUse" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F3E5F5"/><stop offset="100%" stop-color="#CE93D8"/>
+    </linearGradient>
+  </defs>
+
+  <text x="550" y="32" text-anchor="middle" font-size="20" font-weight="bold" fill="#333">Hall 电角度与 PLL 转速观测的关系</text>
+
+  <!-- ===== 电角度链（上半部分） ===== -->
+  <rect x="30" y="60" width="1040" height="130" rx="10" fill="url(#gElec)" stroke="#1565C0" stroke-width="1.5" opacity="0.5"/>
+  <text x="50" y="85" font-size="14" font-weight="bold" fill="#0D47A1">电角度链 —— 给 FOC 用，不经过 PLL</text>
+
+  <rect x="60" y="100" width="130" height="55" rx="6" fill="#fff" stroke="#1565C0" stroke-width="1.5"/>
+  <text x="125" y="125" text-anchor="middle" font-size="12" font-weight="bold" fill="#0D47A1">三路霍尔信号</text>
+  <text x="125" y="143" text-anchor="middle" font-size="10" fill="#666">TIM5 输入捕获</text>
+
+  <rect x="240" y="100" width="150" height="55" rx="6" fill="#fff" stroke="#1565C0" stroke-width="1.5"/>
+  <text x="315" y="125" text-anchor="middle" font-size="12" font-weight="bold" fill="#0D47A1">边沿解码 + 外推</text>
+  <text x="315" y="143" text-anchor="middle" font-size="10" fill="#666">周期平均 / 扇区钳位</text>
+
+  <rect x="440" y="100" width="150" height="55" rx="6" fill="#fff" stroke="#1565C0" stroke-width="1.5"/>
+  <text x="515" y="125" text-anchor="middle" font-size="12" font-weight="bold" fill="#0D47A1">零位标定 + 方向</text>
+  <text x="515" y="143" text-anchor="middle" font-size="10" fill="#666">h0 偏移 + σ 方向符号</text>
+
+  <rect x="640" y="100" width="140" height="55" rx="6" fill="#BBDEFB" stroke="#0D47A1" stroke-width="2"/>
+  <text x="710" y="125" text-anchor="middle" font-size="14" font-weight="bold" fill="#0D47A1">FOC 电角度 Theta</text>
+  <text x="710" y="143" text-anchor="middle" font-size="10" fill="#1565C0">σ × (hall_ang − h0)</text>
+
+  <rect x="830" y="100" width="210" height="55" rx="6" fill="#fff" stroke="#1565C0" stroke-width="1.5"/>
+  <text x="935" y="125" text-anchor="middle" font-size="12" font-weight="bold" fill="#0D47A1">Park / 反Park / 死区补偿</text>
+  <text x="935" y="143" text-anchor="middle" font-size="10" fill="#666">直接使用 Theta 计算</text>
+
+  <line x1="190" y1="127" x2="235" y2="127" stroke="#555" stroke-width="1.5" marker-end="url(#arr2)"/>
+  <line x1="390" y1="127" x2="435" y2="127" stroke="#555" stroke-width="1.5" marker-end="url(#arr2)"/>
+  <line x1="590" y1="127" x2="635" y2="127" stroke="#555" stroke-width="1.5" marker-end="url(#arr2)"/>
+  <line x1="780" y1="127" x2="825" y2="127" stroke="#555" stroke-width="1.5" marker-end="url(#arr2)"/>
+
+  <!-- ===== 机械角（中间） ===== -->
+  <rect x="30" y="215" width="1040" height="90" rx="10" fill="url(#gMech)" stroke="#E65100" stroke-width="1.5" opacity="0.5"/>
+  <text x="50" y="240" font-size="14" font-weight="bold" fill="#BF360C">机械角 —— 由边沿计数 + 扇区插值合成，不是 Theta÷4</text>
+
+  <rect x="200" y="250" width="280" height="40" rx="6" fill="#fff" stroke="#E65100" stroke-width="1.5"/>
+  <text x="340" y="275" text-anchor="middle" font-size="12" fill="#BF360C">θm = Nsigned×(π/3)/p + 扇区插值/p − θm_zero</text>
+
+  <rect x="560" y="250" width="180" height="40" rx="6" fill="#FFCC80" stroke="#BF360C" stroke-width="2"/>
+  <text x="650" y="275" text-anchor="middle" font-size="13" font-weight="bold" fill="#BF360C">连续多圈机械角</text>
+
+  <rect x="810" y="250" width="210" height="40" rx="6" fill="#fff" stroke="#E65100" stroke-width="1.5"/>
+  <text x="915" y="275" text-anchor="middle" font-size="12" fill="#BF360C">位置环反馈（fmod 单圈 + 最短路径）</text>
+
+  <line x1="480" y1="270" x2="555" y2="270" stroke="#555" stroke-width="1.5" marker-end="url(#arr2)"/>
+  <line x1="740" y1="270" x2="805" y2="270" stroke="#555" stroke-width="1.5" marker-end="url(#arr2)"/>
+
+  <!-- 电角度 -> 机械角 的派生关系（虚线，标注不是简单除以4） -->
+  <path d="M 710 155 L 710 205 L 650 205 L 650 248" fill="none" stroke="#E65100" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr2)"/>
+  <rect x="720" y="170" width="200" height="30" rx="4" fill="#FFF8E1" stroke="#FFB300" stroke-width="1"/>
+  <text x="820" y="189" text-anchor="middle" font-size="11" fill="#E65100">派生，但不是 Theta÷4（会丢圈数）</text>
+
+  <!-- ===== PLL 转速链（下半部分） ===== -->
+  <rect x="30" y="335" width="1040" height="120" rx="10" fill="url(#gPll)" stroke="#2E7D32" stroke-width="1.5" opacity="0.5"/>
+  <text x="50" y="360" font-size="14" font-weight="bold" fill="#1B5E20">PLL 转速链 —— 只用于测速，PLL 的角度不接 FOC</text>
+
+  <rect x="80" y="375" width="160" height="55" rx="6" fill="#fff" stroke="#2E7D32" stroke-width="1.5"/>
+  <text x="160" y="400" text-anchor="middle" font-size="12" font-weight="bold" fill="#1B5E20">机械角输入</text>
+  <text x="160" y="418" text-anchor="middle" font-size="10" fill="#666">连续多圈 θm</text>
+
+  <rect x="290" y="375" width="180" height="55" rx="6" fill="#fff" stroke="#2E7D32" stroke-width="1.5"/>
+  <text x="380" y="398" text-anchor="middle" font-size="12" font-weight="bold" fill="#1B5E20">PLL_Loop()</text>
+  <text x="380" y="416" text-anchor="middle" font-size="10" fill="#666">相位误差 → PI → 积分更新角</text>
+
+  <rect x="520" y="375" width="160" height="55" rx="6" fill="#A5D6A7" stroke="#1B5E20" stroke-width="2"/>
+  <text x="600" y="400" text-anchor="middle" font-size="13" font-weight="bold" fill="#1B5E20">OutWe 机械角速度</text>
+  <text x="600" y="418" text-anchor="middle" font-size="10" fill="#2E7D32">平滑无台阶 rad/s</text>
+
+  <rect x="730" y="375" width="160" height="55" rx="6" fill="#fff" stroke="#2E7D32" stroke-width="1.5"/>
+  <text x="810" y="400" text-anchor="middle" font-size="12" font-weight="bold" fill="#1B5E20">转 rpm + 钳位 + 低通</text>
+  <text x="810" y="418" text-anchor="middle" font-size="10" fill="#666">±300rpm/拍 + 15Hz LP</text>
+
+  <rect x="940" y="375" width="110" height="55" rx="6" fill="#fff" stroke="#2E7D32" stroke-width="1.5"/>
+  <text x="995" y="400" text-anchor="middle" font-size="12" font-weight="bold" fill="#1B5E20">速度环 PI 反馈</text>
+  <text x="995" y="418" text-anchor="middle" font-size="10" fill="#666">f_speed_fb</text>
+
+  <line x1="240" y1="402" x2="285" y2="402" stroke="#555" stroke-width="1.5" marker-end="url(#arr2)"/>
+  <line x1="470" y1="402" x2="515" y2="402" stroke="#555" stroke-width="1.5" marker-end="url(#arr2)"/>
+  <line x1="680" y1="402" x2="725" y2="402" stroke="#555" stroke-width="1.5" marker-end="url(#arr2)"/>
+  <line x1="890" y1="402" x2="935" y2="402" stroke="#555" stroke-width="1.5" marker-end="url(#arr2)"/>
+
+  <!-- 机械角 -> PLL 输入 -->
+  <path d="M 650 290 L 650 330 L 160 330 L 160 373" fill="none" stroke="#2E7D32" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr2)"/>
+
+  <!-- 关键区分标注 -->
+  <rect x="350" y="475" width="400" height="55" rx="8" fill="#FFEBEE" stroke="#C62828" stroke-width="2"/>
+  <text x="550" y="498" text-anchor="middle" font-size="14" font-weight="bold" fill="#B71C1C">关键区分</text>
+  <text x="550" y="520" text-anchor="middle" font-size="12" fill="#C62828">PLL 内部估计角 OutRe 不接 FOC 的 Theta；PLL 只输出转速给速度环</text>
+</svg>

@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 620" font-family="Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#555"/>
+    </marker>
+    <linearGradient id="gMode" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E3F2FD"/><stop offset="100%" stop-color="#BBDEFB"/>
+    </linearGradient>
+    <linearGradient id="gLoop" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFF3E0"/><stop offset="100%" stop-color="#FFE0B2"/>
+    </linearGradient>
+    <linearGradient id="gFOC" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E8F5E9"/><stop offset="100%" stop-color="#C8E6C9"/>
+    </linearGradient>
+    <linearGradient id="gHW" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F3E5F5"/><stop offset="100%" stop-color="#E1BEE7"/>
+    </linearGradient>
+    <linearGradient id="gComp" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFEBEE"/><stop offset="100%" stop-color="#FFCDD2"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Title -->
+  <text x="600" y="32" text-anchor="middle" font-size="20" font-weight="bold" fill="#333">系统整体链路与补偿插入位置</text>
+
+  <!-- Mode layer -->
+  <rect x="40" y="60" width="160" height="50" rx="8" fill="url(#gMode)" stroke="#1976D2" stroke-width="1.5"/>
+  <text x="120" y="90" text-anchor="middle" font-size="14" font-weight="bold" fill="#1565C0">转矩模式 m0</text>
+  <rect x="40" y="120" width="160" height="50" rx="8" fill="url(#gMode)" stroke="#1976D2" stroke-width="1.5"/>
+  <text x="120" y="150" text-anchor="middle" font-size="14" font-weight="bold" fill="#1565C0">速度模式 m1</text>
+  <rect x="40" y="180" width="160" height="50" rx="8" fill="url(#gMode)" stroke="#1976D2" stroke-width="1.5"/>
+  <text x="120" y="210" text-anchor="middle" font-size="14" font-weight="bold" fill="#1565C0">位置模式 m2</text>
+
+  <!-- Loop layer -->
+  <rect x="280" y="60" width="160" height="50" rx="8" fill="url(#gLoop)" stroke="#F57C00" stroke-width="1.5"/>
+  <text x="360" y="90" text-anchor="middle" font-size="14" font-weight="bold" fill="#E65100">位置环 200Hz</text>
+  <rect x="280" y="120" width="160" height="50" rx="8" fill="url(#gLoop)" stroke="#F57C00" stroke-width="1.5"/>
+  <text x="360" y="150" text-anchor="middle" font-size="14" font-weight="bold" fill="#E65100">速度环 1kHz</text>
+  <rect x="280" y="180" width="160" height="50" rx="8" fill="url(#gLoop)" stroke="#F57C00" stroke-width="1.5"/>
+  <text x="360" y="210" text-anchor="middle" font-size="14" font-weight="bold" fill="#E65100">电流环 20kHz</text>
+
+  <!-- FOC layer -->
+  <rect x="520" y="60" width="140" height="50" rx="8" fill="url(#gFOC)" stroke="#388E3C" stroke-width="1.5"/>
+  <text x="590" y="90" text-anchor="middle" font-size="14" font-weight="bold" fill="#2E7D32">Clarke / Park</text>
+  <rect x="520" y="120" width="140" height="50" rx="8" fill="url(#gFOC)" stroke="#388E3C" stroke-width="1.5"/>
+  <text x="590" y="150" text-anchor="middle" font-size="14" font-weight="bold" fill="#2E7D32">电流 PI + 圆限幅</text>
+  <rect x="520" y="180" width="140" height="50" rx="8" fill="url(#gFOC)" stroke="#388E3C" stroke-width="1.5"/>
+  <text x="590" y="210" text-anchor="middle" font-size="14" font-weight="bold" fill="#2E7D32">反Park + SVPWM</text>
+
+  <!-- Hardware layer -->
+  <rect x="740" y="120" width="140" height="50" rx="8" fill="url(#gHW)" stroke="#7B1FA2" stroke-width="1.5"/>
+  <text x="810" y="150" text-anchor="middle" font-size="14" font-weight="bold" fill="#6A1B9A">TIM8 PWM 输出</text>
+  <rect x="940" y="120" width="140" height="50" rx="8" fill="url(#gHW)" stroke="#7B1FA2" stroke-width="1.5"/>
+  <text x="1010" y="150" text-anchor="middle" font-size="14" font-weight="bold" fill="#6A1B9A">逆变器 + 电机</text>
+
+  <!-- Arrows: mode -> loop -->
+  <line x1="200" y1="85" x2="275" y2="85" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="200" y1="145" x2="275" y2="145" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="200" y1="205" x2="275" y2="205" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Arrows: loop cascade -->
+  <line x1="360" y1="110" x2="360" y2="118" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="370" y="116" font-size="11" fill="#888">速度指令</text>
+  <line x1="360" y1="170" x2="360" y2="178" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="370" y="176" font-size="11" fill="#888">Iq指令</text>
+
+  <!-- Arrows: loop -> FOC -->
+  <line x1="440" y1="205" x2="515" y2="205" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="440" y1="145" x2="515" y2="145" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="440" y1="85" x2="515" y2="85" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Arrows: FOC cascade -->
+  <line x1="590" y1="110" x2="590" y2="118" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="590" y1="170" x2="590" y2="178" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Arrows: FOC -> HW -->
+  <line x1="660" y1="205" x2="735" y2="155" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="880" y1="145" x2="935" y2="145" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Feedback: current -->
+  <path d="M 1010 175 L 1010 280 L 590 280 L 590 235" fill="none" stroke="#1976D2" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#arrow)"/>
+  <text x="800" y="273" text-anchor="middle" font-size="12" fill="#1976D2">三相电流 ADC 采样反馈</text>
+
+  <!-- Feedback: Hall angle -->
+  <path d="M 1010 175 L 1010 330 L 360 330 L 360 235" fill="none" stroke="#F57C00" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#arrow)"/>
+  <text x="680" y="323" text-anchor="middle" font-size="12" fill="#F57C00">霍尔角度 / PLL 转速反馈</text>
+
+  <!-- Compensation boxes -->
+  <rect x="40" y="380" width="1120" height="200" rx="10" fill="#FAFAFA" stroke="#DDD" stroke-width="1"/>
+  <text x="60" y="408" font-size="15" font-weight="bold" fill="#333">18 项补偿插入位置</text>
+
+  <!-- Comp group 1: angle -->
+  <rect x="60" y="425" width="340" height="135" rx="6" fill="url(#gComp)" stroke="#E57373" stroke-width="1"/>
+  <text x="230" y="448" text-anchor="middle" font-size="13" font-weight="bold" fill="#C62828">角度估算（改电流矢量方向）</text>
+  <text x="75" y="472" font-size="12" fill="#444">• 角度助推 I/F 蠕动（低速 10rad/s）</text>
+  <text x="75" y="494" font-size="12" fill="#444">• 丢边沿衰减处理（60rad/s²）</text>
+  <text x="75" y="516" font-size="12" fill="#444">• 位置专用助推（3rad/s）</text>
+  <text x="75" y="538" font-size="12" fill="#444">• 扇区钳位 + 周期平均外推</text>
+
+  <!-- Comp group 2: current cmd -->
+  <rect x="430" y="425" width="340" height="135" rx="6" fill="url(#gComp)" stroke="#E57373" stroke-width="1"/>
+  <text x="600" y="448" text-anchor="middle" font-size="13" font-weight="bold" fill="#C62828">外环电流指令（改转矩大小）</text>
+  <text x="445" y="472" font-size="12" fill="#444">• 摩擦前馈四状态机（0.75/0.35/0.15A）</text>
+  <text x="445" y="494" font-size="12" fill="#444">• 抗积分饱和（非对称钳制）</text>
+  <text x="445" y="516" font-size="12" fill="#444">• 转矩抬底 + 位置破静摩擦补偿</text>
+  <text x="445" y="538" font-size="12" fill="#444">• Iq 斜率限幅 100A/s + 低速禁反向制动</text>
+
+  <!-- Comp group 3: voltage -->
+  <rect x="800" y="425" width="340" height="135" rx="6" fill="url(#gComp)" stroke="#E57373" stroke-width="1"/>
+  <text x="970" y="448" text-anchor="middle" font-size="13" font-weight="bold" fill="#C62828">电流环输出电压（改实际施加电压）</text>
+  <text x="815" y="472" font-size="12" fill="#444">• 死区电压补偿（0.171V，用 Theta 投影）</text>
+  <text x="815" y="494" font-size="12" fill="#444">• 电流采样滤波整定（α=0.4）</text>
+  <text x="815" y="516" font-size="12" fill="#444">• 零极点对消电流环整定（300Hz）</text>
+  <text x="815" y="538" font-size="12" fill="#444">• dq 矢量圆限幅 + SVPWM 比例缩放</text>
+
+  <!-- PLL note -->
+  <rect x="430" y="250" width="340" height="45" rx="6" fill="#FFF8E1" stroke="#FFB300" stroke-width="1"/>
+  <text x="600" y="270" text-anchor="middle" font-size="12" font-weight="bold" fill="#E65100">PLL 只用于测速（速度环反馈）</text>
+  <text x="600" y="288" text-anchor="middle" font-size="11" fill="#F57C00">FOC 电角度 Theta 直接来自霍尔估算，不经过 PLL</text>
+</svg>

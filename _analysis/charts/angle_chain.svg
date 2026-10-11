@@ -1,0 +1,161 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 820" font-family="Microsoft YaHei, Arial, sans-serif">
+  <defs>
+    <marker id="arr" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#16a34a"/>
+    </marker>
+    <marker id="arrRed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#dc2626"/>
+    </marker>
+    <marker id="arrBlue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="820" fill="#fafafa"/>
+  <text x="600" y="38" text-anchor="middle" font-size="22" font-weight="bold" fill="#111">角度获取链路详解</text>
+
+  <!-- 主链路 -->
+  <g font-size="13" text-anchor="middle">
+    <!-- 霍尔输入 -->
+    <rect x="40" y="80" width="140" height="70" rx="8" fill="#fff" stroke="#16a34a" stroke-width="2.5"/>
+    <text x="110" y="108" font-weight="bold" font-size="14">三路霍尔信号</text>
+    <text x="110" y="128">A/B/C，120°相位差</text>
+    <text x="110" y="143">TIM5 输入捕获</text>
+
+    <!-- 边沿解码 -->
+    <rect x="220" y="80" width="140" height="70" rx="8" fill="#fff" stroke="#16a34a" stroke-width="2"/>
+    <text x="290" y="108" font-weight="bold" font-size="14">边沿解码 + 去抖</text>
+    <text x="290" y="128">去抖窗 100µs</text>
+    <text x="290" y="143">合并过渡补计数</text>
+
+    <!-- s_hall_ang -->
+    <rect x="400" y="70" width="180" height="90" rx="8" fill="#ecfdf5" stroke="#15803d" stroke-width="2.5"/>
+    <text x="490" y="100" font-weight="bold" font-size="15">s_hall_ang</text>
+    <text x="490" y="122" font-size="12">原始估算电角度</text>
+    <text x="490" y="140" font-size="12">范围 [0, 2π)</text>
+    <text x="490" y="155" font-size="11" fill="#166534">边沿触发 + 扇区内连续外推</text>
+
+    <!-- 减零位乘方向 -->
+    <rect x="620" y="80" width="160" height="70" rx="8" fill="#fff" stroke="#16a34a" stroke-width="2"/>
+    <text x="700" y="108" font-weight="bold" font-size="14">减零位 × 方向符号</text>
+    <text x="700" y="128">s_zero_ofs（上电标定）</text>
+    <text x="700" y="143">s_hall_dir（方向自检）</text>
+
+    <!-- Theta -->
+    <rect x="820" y="65" width="170" height="100" rx="8" fill="#dcfce7" stroke="#15803d" stroke-width="3"/>
+    <text x="905" y="95" font-weight="bold" font-size="16">FOCParm.Theta</text>
+    <text x="905" y="118" font-size="13">FOC 最终用电角度</text>
+    <text x="905" y="138" font-size="12">范围 [0, 2π)</text>
+    <text x="905" y="156" font-size="11" fill="#166534">dir × (hall_ang - zero_ofs)</text>
+  </g>
+
+  <!-- 主链路箭头 -->
+  <g stroke="#16a34a" stroke-width="2.5" fill="none">
+    <line x1="180" y1="115" x2="218" y2="115" marker-end="url(#arr)"/>
+    <line x1="360" y1="115" x2="398" y2="115" marker-end="url(#arr)"/>
+    <line x1="580" y1="115" x2="618" y2="115" marker-end="url(#arr)"/>
+    <line x1="780" y1="115" x2="818" y2="115" marker-end="url(#arr)"/>
+  </g>
+
+  <!-- s_hall_ang 内部细节标注 -->
+  <rect x="400" y="180" width="180" height="100" rx="6" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+  <text x="490" y="202" font-size="12" font-weight="bold" text-anchor="middle" fill="#166534">s_hall_ang 更新逻辑</text>
+  <text x="415" y="224" font-size="11" fill="#333">① 边沿触发：跳到对应扇区起点</text>
+  <text x="415" y="242" font-size="11" fill="#333">② 扇区内：ang += spd × ts</text>
+  <text x="415" y="260" font-size="11" fill="#333">③ 钳位：始终落在 [起点, 起点+60°]</text>
+  <text x="415" y="276" font-size="11" fill="#dc2626">最坏误差60°，转矩方向永不反转</text>
+
+  <!-- 60度钳位保护标注 -->
+  <path d="M 490 160 L 490 178" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4,2" fill="none" marker-end="url(#arrRed)"/>
+
+  <!-- Theta 的三个用途 -->
+  <g font-size="12" text-anchor="middle">
+    <rect x="820" y="190" width="170" height="45" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+    <text x="905" y="210" font-weight="bold">① Park 变换</text>
+    <text x="905" y="226">三相电流 → dq 电流</text>
+
+    <rect x="820" y="245" width="170" height="45" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+    <text x="905" y="265" font-weight="bold">② 反 Park 变换</text>
+    <text x="905" y="281">dq 电压 → αβ 电压</text>
+
+    <rect x="820" y="300" width="170" height="45" rx="6" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+    <text x="905" y="320" font-weight="bold">③ 死区电压补偿</text>
+    <text x="905" y="336">相电流符号 → dq 投影</text>
+  </g>
+  <g stroke="#2563eb" stroke-width="1.5" stroke-dasharray="4,2" fill="none">
+    <line x1="905" y1="165" x2="905" y2="188" marker-end="url(#arrBlue)"/>
+  </g>
+
+  <!-- 零位标定流程 -->
+  <rect x="40" y="310" width="380" height="130" rx="8" fill="#fffbeb" stroke="#fbbf24" stroke-width="1.5"/>
+  <text x="60" y="335" font-size="14" font-weight="bold" fill="#92400e">上电零位标定流程（确定 s_zero_ofs）</text>
+  <g font-size="11" fill="#333">
+    <text x="60" y="358">① ALIGN(0°定位, 1s, Id=0.5A) — 转子吸到 d 轴对齐 U 相</text>
+    <text x="60" y="378">② ALIGN2(180°定位, 1s, Id=0.5A) — 记录兜底零位</text>
+    <text x="60" y="398">③ CALIB(零位细分标定) — Id 缓慢拖动跨霍尔边沿，精度几度</text>
+    <text x="60" y="418">④ DIRCHK(方向自检) — 给小+Iq看转子方向，极性反则 zero_ofs += π</text>
+    <text x="60" y="435" fill="#dc2626">零位误差从 ±30° 压到几度，上电无飞车</text>
+  </g>
+
+  <!-- 机械角转换 -->
+  <g font-size="13" text-anchor="middle">
+    <rect x="620" y="380" width="160" height="60" rx="8" fill="#fff" stroke="#16a34a" stroke-width="2"/>
+    <text x="700" y="405" font-weight="bold">÷ HALL_POLE_PAIR</text>
+    <text x="700" y="425">极对数 = 4</text>
+
+    <rect x="820" y="375" width="170" height="70" rx="8" fill="#ecfdf5" stroke="#15803d" stroke-width="2.5"/>
+    <text x="905" y="403" font-weight="bold" font-size="15">机械角</text>
+    <text x="905" y="423" font-size="12">s_mech_angle_out</text>
+    <text x="905" y="440" font-size="11" fill="#166534">连续多圈，不 wrap，标定结束为 0</text>
+  </g>
+  <g stroke="#16a34a" stroke-width="2.5" fill="none">
+    <line x1="905" y1="345" x2="905" y2="373" marker-end="url(#arr)"/>
+    <line x1="780" y1="410" x2="818" y2="410" marker-end="url(#arr)"/>
+  </g>
+
+  <!-- 机械角计算公式 -->
+  <rect x="620" y="465" width="370" height="80" rx="6" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+  <text x="640" y="488" font-size="12" font-weight="bold" fill="#166534">机械角计算公式：</text>
+  <text x="640" y="510" font-size="11" fill="#333">edge_m = 有符号边沿数 × 60° / 极对数(4)</text>
+  <text x="640" y="528" font-size="11" fill="#333">frac = (s_hall_ang - 扇区起点) / 极对数(4)</text>
+  <text x="640" y="543" font-size="11" fill="#333">机械角 = edge_m + frac - 标定零位 s_mech_zero</text>
+
+  <!-- 机械角两个去向 -->
+  <g font-size="12" text-anchor="middle">
+    <rect x="820" y="475" width="170" height="55" rx="6" fill="#faf5ff" stroke="#7c3aed" stroke-width="2"/>
+    <text x="905" y="498" font-weight="bold">① 位置环反馈</text>
+    <text x="905" y="516">fmod 归一化到单圈 [0,2π)</text>
+
+    <rect x="820" y="545" width="170" height="55" rx="6" fill="#fff7ed" stroke="#ea580c" stroke-width="2"/>
+    <text x="905" y="568" font-weight="bold">② PLL 观测器输入</text>
+    <text x="905" y="586">连续机械角 → 平滑转速</text>
+  </g>
+  <g stroke="#16a34a" stroke-width="1.5" stroke-dasharray="4,2" fill="none">
+    <line x1="905" y1="445" x2="905" y2="473" marker-end="url(#arr)"/>
+  </g>
+
+  <!-- 低速角度助推 -->
+  <rect x="40" y="470" width="380" height="120" rx="8" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.5"/>
+  <text x="60" y="495" font-size="14" font-weight="bold" fill="#991b1b">低速角度助推（修改 s_angle_spd，间接影响 Theta）</text>
+  <g font-size="11" fill="#333">
+    <text x="60" y="518">触发条件：命令了 Iq 且转速 &lt; 25rpm（速度模式）</text>
+    <text x="60" y="538">动作：s_angle_spd 抬到 ±10rad/s（≈24rpm 机械）蠕动</text>
+    <text x="60" y="558">效果：估算角继续转 → 转子转过 15° → 产生新边沿 → 交回闭环</text>
+    <text x="60" y="578">退出：转速 &gt; 45rpm（迟滞防抖）</text>
+  </g>
+  <path d="M 420 530 L 400 530 L 400 115" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4,2" fill="none" marker-end="url(#arrRed)"/>
+
+  <!-- 丢边沿衰减 -->
+  <rect x="40" y="610" width="380" height="90" rx="8" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.5"/>
+  <text x="60" y="635" font-size="14" font-weight="bold" fill="#991b1b">丢边沿衰减处理（防角度冻结自锁）</text>
+  <g font-size="11" fill="#333">
+    <text x="60" y="658">旧代码：丢边沿后 s_angle_spd 直接清零 → 角度冻结 → 自锁</text>
+    <text x="60" y="678">新代码：按 60rad/s² 线性衰减到 0（不直接清零），平滑过渡</text>
+    <text x="60" y="696">助推期故意不夹 60° 扇区，让估算角开环越过边界产生新边沿</text>
+  </g>
+
+  <!-- 底部总结 -->
+  <rect x="40" y="725" width="1120" height="75" rx="8" fill="#15803d" stroke="#14532d" stroke-width="2"/>
+  <text x="600" y="752" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff">核心公式：Theta = s_hall_dir × (s_hall_ang - s_zero_ofs)，机械角 = Theta ÷ 极对数(4)</text>
+  <text x="600" y="778" text-anchor="middle" font-size="12" fill="#dcfce7">FOC 电角度 Theta 直接来自霍尔估算（60°扇区钳位兜底），不经过 PLL；PLL 只从机械角观测平滑转速</text>
+</svg>

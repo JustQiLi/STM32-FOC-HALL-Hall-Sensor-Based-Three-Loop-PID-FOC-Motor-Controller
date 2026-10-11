@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1030" viewBox="0 0 1200 1030" role="img"><title>Hall 电角度 · 机械角 · PLL · FOC：关系与数据流</title><rect width="1200" height="1030" fill="white"/>
+<text x="30" y="36" text-anchor="start" dominant-baseline="central" font-family="Microsoft YaHei, sans-serif" font-size="28" fill="#26384c">Hall 电角度 · 机械角 · PLL · FOC：关系与数据流</text>
+<text x="30" y="74" text-anchor="start" dominant-baseline="central" font-family="Microsoft YaHei, sans-serif" font-size="19" fill="#26384c">同一组 Hall 信息分为电角度、机械位置、机械转速三条支路；PLL 只观测转速。</text>
+<rect x="30" y="120" width="270" height="130" rx="12" fill="#eef5ff" stroke="#346aa0" stroke-width="2"/>
+<text x="165.0" y="158.0" text-anchor="middle" dominant-baseline="central" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#26384c">三路 Hall → TIM5</text>
+<text x="165.0" y="185.0" text-anchor="middle" dominant-baseline="central" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#26384c">扇区 / 转向 / 边沿周期</text>
+<text x="165.0" y="212.0" text-anchor="middle" dominant-baseline="central" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#26384c">去抖与异常边沿处理</text>
+<rect x="370" y="120" width="430" height="130" rx="12" fill="#eef5ff" stroke="#346aa0" stroke-width="2"/>
+<text x="585.0" y="158.0" text-anchor="middle" dominant-baseline="central" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#26384c">Hall 内部电角度 h</text>
+<text x="585.0" y="185.0" text-anchor="middle" dominant-baseline="central" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#26384c">周期平均 → 扇区内外推 / 边沿校正</text>
+<text x="585.0" y="212.0" text-anchor="middle" dominant-baseline="central" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#26384c">正常扇区钳位；丢边沿衰减</text>
+<polyline points="300,185 370,185" fill="none" stroke="#346aa0" stroke-width="2"/><polygon points="370,185 360.9955289764732,189.3496553411123 360.9955289764732,180.6503446588877" fill="#346aa0"/>
+<rect x="870" y="120" width="300" height="130" rx="12" fill="#fff5e5" stroke="#b87927" stroke-width="2"/>
+<text x="1020.0" y="158.0" text-anchor="middle" dominant-baseline="central" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#26384c">角度助推请求</text>
+<text x="1020.0" y="185.0" text-anchor="middle" dominant-baseline="central" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#26384c">修改外推角速度</text>
+<text x="1020.0" y="212.0" text-anchor="middle" dominant-baseline="central" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#26384c">蠕动时放开扇区钳位</text>
+<polyline points="870,185 800,185" fill="none" stroke="#b87927" stroke-width="2" stroke-dasharray="7 5"/><polygon points="800,185 809.0044710235268,180.6503446588877 809.0044710235268,189.3496553411123" fill="#b87927"/>
+<rect x="30" y="370" width="380" height="145" rx="12" fill="#eef5ff" stroke="#346aa0" stroke-width="2"/>
+<text x="220.0" y="402.0" text-anchor="middle" dominant-baseline="central" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#26384c">FOC 电角度 θe</text>
+<text x="220.0" y="429.0" text-anchor="middle" dominant-baseline="central" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#26384c">θe = wrap[σ × (h − h0)]</text>
+<text x="220.0" y="456.0" text-anchor="middle" dominant-baseline="central" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#26384c">零位 h0 / 方向 σ 来自上电标定</text>
+<text x="220.0" y="483.0" text-anchor="middle" dominant-baseline="central" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#26384c">HALL_GetElecAngle()</text>
+<polyline points="475,250 475,303 220,303 220,370" fill="none" stroke="#346aa0" stroke-width="2"/><polygon points="220,370 215.6503446588877,360.9955289764732 224.3496553411123,360.9955289764732" fill="#346aa0"/>
+<rect x="550" y="370" width="620" height="145" rx="12" fill="#eef5ff" stroke="#346aa0" stroke-width="2"/>
+<text x="860.0" y="402.0" text-anchor="middle" dominant-baseline="central" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#26384c">累计机械角 θm</text>
+<text x="860.0" y="429.0" text-anchor="middle" dominant-baseline="central" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#26384c">有符号边沿计数 + 本扇区插值，折算极对数并减机械零点</text>
+<text x="860.0" y="456.0" text-anchor="middle" dominant-baseline="central" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#26384c">θm = N × 60° / p + frac(h) / p − θm_zero</text>
+<text x="860.0" y="483.0" text-anchor="middle" dominant-baseline="central" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#26384c">HALL_GetMechAngle()</text>
+<polyline points="690,250 690,370" fill="none" stroke="#346aa0" stroke-width="2"/><polygon points="690,370 685.6503446588877,360.9955289764732 694.3496553411123,360.9955289764732" fill="#346aa0"/>
+<text x="710" y="305" text-anchor="start" dominant-baseline="central" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#346aa0">边沿累计保留机械圈数</text>
+<rect x="30" y="650" width="380" height="140" rx="12" fill="#edf8f2" stroke="#43836b" stroke-width="2"/>
+<text x="220.0" y="679.5" text-anchor="middle" dominant-baseline="central" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#26384c">FOC 使用 θe</text>
+<text x="220.0" y="706.5" text-anchor="middle" dominant-baseline="central" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#26384c">Park：Iα/Iβ → Id/Iq</text>
+<text x="220.0" y="733.5" text-anchor="middle" dominant-baseline="central" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#26384c">反 Park：Vd/Vq → Vα/Vβ</text>
+<text x="220.0" y="760.5" text-anchor="middle" dominant-baseline="central" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#26384c">死区补偿：相电流符号 → dq 投影</text>
+<polyline points="220,515 220,650" fill="none" stroke="#43836b" stroke-width="2"/><polygon points="220,650 215.6503446588877,640.9955289764732 224.3496553411123,640.9955289764732" fill="#43836b"/>
+<text x="240" y="582" text-anchor="start" dominant-baseline="central" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#43836b">直接输入，不经过 PLL</text>
+<rect x="550" y="650" width="250" height="140" rx="12" fill="#eef5ff" stroke="#346aa0" stroke-width="2"/>
+<text x="675.0" y="679.5" text-anchor="middle" dominant-baseline="central" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#26384c">位置反馈</text>
+<text x="675.0" y="706.5" text-anchor="middle" dominant-baseline="central" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#26384c">单圈回绕 [0, 2π)</text>
+<text x="675.0" y="733.5" text-anchor="middle" dominant-baseline="central" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#26384c">增量低通 / 最短路径</text>
+<text x="675.0" y="760.5" text-anchor="middle" dominant-baseline="central" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#26384c">位置 PI → 速度目标</text>
+<polyline points="675,515 675,650" fill="none" stroke="#346aa0" stroke-width="2"/><polygon points="675,650 670.6503446588877,640.9955289764732 679.3496553411123,640.9955289764732" fill="#346aa0"/>
+<rect x="870" y="650" width="300" height="140" rx="12" fill="#eef5ff" stroke="#346aa0" stroke-width="2"/>
+<text x="1020.0" y="679.5" text-anchor="middle" dominant-baseline="central" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#26384c">PLL 转速观测器 · 20 kHz</text>
+<text x="1020.0" y="706.5" text-anchor="middle" dominant-baseline="central" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#26384c">θm − 内部角 OutRe → PI</text>
+<text x="1020.0" y="733.5" text-anchor="middle" dominant-baseline="central" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#26384c">输出 ωm = OutWe</text>
+<text x="1020.0" y="760.5" text-anchor="middle" dominant-baseline="central" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#26384c">积分 ωm → 内部角 OutRe</text>
+<polyline points="1020,515 1020,650" fill="none" stroke="#346aa0" stroke-width="2"/><polygon points="1020,650 1015.6503446588877,640.9955289764732 1024.3496553411123,640.9955289764732" fill="#346aa0"/>
+<rect x="870" y="865" width="300" height="95" rx="12" fill="#eef5ff" stroke="#346aa0" stroke-width="2"/>
+<text x="1020.0" y="899.0" text-anchor="middle" dominant-baseline="central" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#26384c">速度反馈 → 速度 PI</text>
+<text x="1020.0" y="926.0" text-anchor="middle" dominant-baseline="central" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#26384c">ωm → rpm → 变化钳位 / 低通</text>
+<polyline points="1020,790 1020,865" fill="none" stroke="#346aa0" stroke-width="2"/><polygon points="1020,865 1015.6503446588877,855.9955289764732 1024.3496553411123,855.9955289764732" fill="#346aa0"/>
+<rect x="30" y="865" width="770" height="95" rx="12" fill="#f3f4f7" stroke="#8794a5" stroke-width="2"/>
+<text x="415.0" y="885.5" text-anchor="middle" dominant-baseline="central" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#26384c">关键关系 · p = 4</text>
+<text x="415.0" y="912.5" text-anchor="middle" dominant-baseline="central" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#26384c">60° 电角 = 15° 机械角；累计机械角不能由回绕 θe / p 得到</text>
+<text x="415.0" y="939.5" text-anchor="middle" dominant-baseline="central" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#26384c">PLL 的 OutRe 仅作内部反馈，不连接 FOC 的 Theta</text>
+<text x="30" y="1000" text-anchor="start" dominant-baseline="central" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#26384c">机械位置与 PLL 同源于 Hall 累计机械角；电角度支路决定 FOC 坐标系，速度支路决定转矩电流目标。</text>
+</svg>

@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="690" viewBox="0 0 1200 690" role="img">
+<rect width="1200" height="100%" fill="white"/>
+<text x="30" y="35" font-family="Microsoft YaHei, sans-serif" font-size="27" fill="#233247" text-anchor="start" dominant-baseline="central">角度与反馈：同源于 Hall，FOC 和 PLL 各走一条支路</text>
+<rect x="30" y="90" width="260" height="125" rx="12" fill="#eef5ff" stroke="#6f93c1" stroke-width="2"/>
+<text x="160.0" y="124.5" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#233247" text-anchor="middle" dominant-baseline="central">三路 Hall → TIM5 捕获</text>
+<text x="160.0" y="152.5" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#233247" text-anchor="middle" dominant-baseline="central">有效扇区 / 方向 / 周期</text>
+<text x="160.0" y="180.5" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#233247" text-anchor="middle" dominant-baseline="central">去抖、异常边沿处理</text>
+<rect x="370" y="90" width="330" height="125" rx="12" fill="#eef5ff" stroke="#6f93c1" stroke-width="2"/>
+<text x="535.0" y="124.5" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#233247" text-anchor="middle" dominant-baseline="central">Hall 电角度估算 h</text>
+<text x="535.0" y="152.5" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#233247" text-anchor="middle" dominant-baseline="central">周期平均 → 每拍外推</text>
+<text x="535.0" y="180.5" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#233247" text-anchor="middle" dominant-baseline="central">边沿相位校正 + 扇区钳位</text>
+<rect x="790" y="90" width="380" height="125" rx="12" fill="#eef5ff" stroke="#6f93c1" stroke-width="2"/>
+<text x="980.0" y="124.5" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#233247" text-anchor="middle" dominant-baseline="central">FOC 电角度 θe</text>
+<text x="980.0" y="152.5" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#233247" text-anchor="middle" dominant-baseline="central">wrap[σ × (h − h0)]</text>
+<text x="980.0" y="180.5" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#233247" text-anchor="middle" dominant-baseline="central">直接供 Park / 反 Park / 死区投影</text>
+<polyline points="290,152 370,152" fill="none" stroke="#55708c" stroke-width="2"/><polygon points="370,152 360.0950818741206,156.78462087522354 360.0950818741206,147.21537912477646" fill="#55708c"/>
+<polyline points="700,152 790,152" fill="none" stroke="#55708c" stroke-width="2"/><polygon points="790,152 780.0950818741205,156.78462087522354 780.0950818741205,147.21537912477646" fill="#55708c"/>
+<rect x="30" y="305" width="260" height="125" rx="12" fill="#fff6e8" stroke="#c89b54" stroke-width="2"/>
+<text x="160.0" y="339.5" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#233247" text-anchor="middle" dominant-baseline="central">角度助推请求</text>
+<text x="160.0" y="367.5" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#233247" text-anchor="middle" dominant-baseline="central">低速 Iq 门限 / RPM 迟滞</text>
+<text x="160.0" y="395.5" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#233247" text-anchor="middle" dominant-baseline="central">位置模式另发堵转蠕动请求</text>
+<polyline points="160,305 160,260 535,260 535,215" fill="none" stroke="#bc8534" stroke-width="2" stroke-dasharray="7 5"/><polygon points="535,215 539.7846208752235,224.90491812587945 530.2153791247765,224.90491812587945" fill="#bc8534"/>
+<text x="720" y="258" font-family="Microsoft YaHei, sans-serif" font-size="16" fill="#9c6c2b" text-anchor="start" dominant-baseline="central">修改外推速度；蠕动时放开扇区钳位</text>
+<rect x="370" y="305" width="330" height="125" rx="12" fill="#eef5ff" stroke="#6f93c1" stroke-width="2"/>
+<text x="535.0" y="339.5" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#233247" text-anchor="middle" dominant-baseline="central">累计机械角 θm</text>
+<text x="535.0" y="367.5" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#233247" text-anchor="middle" dominant-baseline="central">有符号边沿累计 + 扇区插值</text>
+<text x="535.0" y="395.5" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#233247" text-anchor="middle" dominant-baseline="central">除以极对数 p，再减机械零点</text>
+<polyline points="630,215 630,305" fill="none" stroke="#55708c" stroke-width="2"/><polygon points="630,305 625.2153791247765,295.0950818741206 634.7846208752235,295.0950818741206" fill="#55708c"/>
+<rect x="790" y="305" width="380" height="125" rx="12" fill="#eef5ff" stroke="#6f93c1" stroke-width="2"/>
+<text x="980.0" y="339.5" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#233247" text-anchor="middle" dominant-baseline="central">PLL 转速观测器 · 20 kHz</text>
+<text x="980.0" y="367.5" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#233247" text-anchor="middle" dominant-baseline="central">相位误差 → PI → 机械角速度</text>
+<text x="980.0" y="395.5" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#233247" text-anchor="middle" dominant-baseline="central">速度积分 → PLL 内部角度反馈</text>
+<polyline points="700,367 790,367" fill="none" stroke="#55708c" stroke-width="2"/><polygon points="790,367 780.0950818741205,371.78462087522354 780.0950818741205,362.21537912477646" fill="#55708c"/>
+<rect x="370" y="505" width="330" height="115" rx="12" fill="#eef5ff" stroke="#6f93c1" stroke-width="2"/>
+<text x="535.0" y="534.5" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#233247" text-anchor="middle" dominant-baseline="central">位置反馈</text>
+<text x="535.0" y="562.5" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#233247" text-anchor="middle" dominant-baseline="central">单圈回绕 + 增量低通</text>
+<text x="535.0" y="590.5" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#233247" text-anchor="middle" dominant-baseline="central">最短路径误差 → 位置 PI</text>
+<polyline points="535,430 535,505" fill="none" stroke="#55708c" stroke-width="2"/><polygon points="535,505 530.2153791247765,495.0950818741206 539.7846208752235,495.0950818741206" fill="#55708c"/>
+<rect x="790" y="505" width="380" height="115" rx="12" fill="#eef5ff" stroke="#6f93c1" stroke-width="2"/>
+<text x="980.0" y="534.5" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#233247" text-anchor="middle" dominant-baseline="central">速度反馈</text>
+<text x="980.0" y="562.5" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#233247" text-anchor="middle" dominant-baseline="central">OutWe → rpm → 每拍变化钳位</text>
+<text x="980.0" y="590.5" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#233247" text-anchor="middle" dominant-baseline="central">15 Hz 低通 → 速度 PI</text>
+<polyline points="980,430 980,505" fill="none" stroke="#55708c" stroke-width="2"/><polygon points="980,505 975.2153791247765,495.0950818741206 984.7846208752235,495.0950818741206" fill="#55708c"/>
+<text x="30" y="660" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#233247" text-anchor="start" dominant-baseline="central">PLL 的 OutRe 不接 FOC；机械角并非回绕电角度 θe / p。p = 4：Hall 每扇区 60°电角 = 15°机械角。</text>
+</svg>

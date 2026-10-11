@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 720" font-family="Microsoft YaHei, Arial, sans-serif">
+  <defs>
+    <marker id="arr" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#ea580c"/>
+    </marker>
+    <marker id="arrBlue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/>
+    </marker>
+    <marker id="arrGreen" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#16a34a"/>
+    </marker>
+  </defs>
+
+  <rect width="1100" height="720" fill="#fafafa"/>
+  <text x="550" y="38" text-anchor="middle" font-size="22" font-weight="bold" fill="#111">PLL 转速观测器链路</text>
+
+  <!-- 关键区分提示 -->
+  <rect x="30" y="55" width="1040" height="45" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+  <text x="550" y="83" text-anchor="middle" font-size="14" font-weight="bold" fill="#92400e">关键区分：PLL 不用于计算 FOC 电角度，只用于从机械角观测出平滑转速。FOC 电角度直接来自霍尔估算。</text>
+
+  <!-- 输入侧 -->
+  <g font-size="13" text-anchor="middle">
+    <rect x="30" y="130" width="160" height="70" rx="8" fill="#ecfdf5" stroke="#15803d" stroke-width="2.5"/>
+    <text x="110" y="158" font-weight="bold" font-size="14">机械角</text>
+    <text x="110" y="178" font-size="12">s_mech_angle_out</text>
+    <text x="110" y="194" font-size="11" fill="#166534">连续多圈，来自角度链</text>
+  </g>
+
+  <!-- PLL 内部结构 -->
+  <rect x="240" y="115" width="520" height="340" rx="10" fill="#fff7ed" stroke="#fdba74" stroke-width="2"/>
+  <text x="500" y="142" text-anchor="middle" font-size="16" font-weight="bold" fill="#9a3412">PLL_Loop() 二阶锁相环（每 20kHz 拍调用）</text>
+
+  <!-- 误差计算 -->
+  <g font-size="12" text-anchor="middle">
+    <rect x="270" y="165" width="200" height="55" rx="6" fill="#fff" stroke="#ea580c" stroke-width="2"/>
+    <text x="370" y="187" font-weight="bold">① 角度误差</text>
+    <text x="370" y="207">Error = wrap(theta_hall - OutRe)</text>
+    <text x="370" y="222" font-size="10" fill="#666">归一化到 ±π，防 0/2π 边界跳变</text>
+  </g>
+
+  <!-- PI 调节 -->
+  <g font-size="12" text-anchor="middle">
+    <rect x="530" y="165" width="200" height="55" rx="6" fill="#fff" stroke="#ea580c" stroke-width="2"/>
+    <text x="630" y="187" font-weight="bold">② PI 调节 → 角速度</text>
+    <text x="630" y="207">OutWe = X0×Error + X1×Error_prev</text>
+    <text x="630" y="222" font-size="10" fill="#666">双线性变换，Kp=300, Ki=20000</text>
+  </g>
+
+  <!-- 积分重建角度 -->
+  <g font-size="12" text-anchor="middle">
+    <rect x="400" y="255" width="200" height="55" rx="6" fill="#fff" stroke="#ea580c" stroke-width="2"/>
+    <text x="500" y="277" font-weight="bold">③ 积分重建角度</text>
+    <text x="500" y="297">OutRe = (T/2)×(OutWe + OutWe_prev)</text>
+    <text x="500" y="312" font-size="10" fill="#666">+ OutRe_prev，wrap 到 [0,2π)</text>
+  </g>
+
+  <!-- 反馈回路 -->
+  <path d="M 600 310 L 600 370 L 370 370 L 370 222" stroke="#ea580c" stroke-width="2" stroke-dasharray="6,3" fill="none" marker-end="url(#arr)"/>
+  <text x="485" y="390" text-anchor="middle" font-size="11" fill="#9a3412">反馈：OutRe 与输入机械角比较，形成闭环跟踪</text>
+
+  <!-- PLL 输出 -->
+  <g font-size="13" text-anchor="middle">
+    <rect x="270" y="410" width="200" height="40" rx="6" fill="#ffedd5" stroke="#ea580c" stroke-width="2.5"/>
+    <text x="370" y="435" font-weight="bold">输出 OutWe（rad/s）</text>
+  </g>
+
+  <!-- 输入箭头 -->
+  <line x1="190" y1="165" x2="268" y2="180" stroke="#16a34a" stroke-width="2.5" fill="none" marker-end="url(#arrGreen)"/>
+
+  <!-- 内部箭头 -->
+  <g stroke="#ea580c" stroke-width="2" fill="none">
+    <line x1="470" y1="192" x2="528" y2="192" marker-end="url(#arr)"/>
+    <line x1="630" y1="220" x2="560" y2="253" marker-end="url(#arr)"/>
+  </g>
+
+  <!-- 后处理链 -->
+  <g font-size="12" text-anchor="middle">
+    <rect x="800" y="130" width="130" height="55" rx="6" fill="#fff" stroke="#ea580c" stroke-width="2"/>
+    <text x="865" y="153" font-weight="bold">转 rpm</text>
+    <text x="865" y="173">RPM_FROM_WM()</text>
+
+    <rect x="800" y="210" width="130" height="55" rx="6" fill="#fff" stroke="#ea580c" stroke-width="2"/>
+    <text x="865" y="233" font-weight="bold">±300rpm 钳位</text>
+    <text x="865" y="253">每帧变化量限制</text>
+
+    <rect x="800" y="290" width="130" height="55" rx="6" fill="#fff" stroke="#ea580c" stroke-width="2"/>
+    <text x="865" y="313" font-weight="bold">15Hz 低通滤波</text>
+    <text x="865" y="333">衰减换相台阶尖峰</text>
+
+    <rect x="800" y="380" width="130" height="60" rx="6" fill="#ffedd5" stroke="#ea580c" stroke-width="2.5"/>
+    <text x="865" y="405" font-weight="bold" font-size="14">speed.f_speed_fb</text>
+    <text x="865" y="425">速度环 PI 反馈</text>
+  </g>
+
+  <g stroke="#ea580c" stroke-width="2.5" fill="none">
+    <line x1="470" y1="430" x2="798" y2="158" marker-end="url(#arr)"/>
+    <line x1="865" y1="185" x2="865" y2="208" marker-end="url(#arr)"/>
+    <line x1="865" y1="265" x2="865" y2="288" marker-end="url(#arr)"/>
+    <line x1="865" y1="345" x2="865" y2="378" marker-end="url(#arr)"/>
+  </g>
+
+  <!-- 为什么需要PLL -->
+  <rect x="30" y="480" width="510" height="210" rx="10" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.5"/>
+  <text x="55" y="508" font-size="15" font-weight="bold" fill="#991b1b">为什么需要 PLL？（霍尔直接测速的问题）</text>
+  <g font-size="12" fill="#333">
+    <text x="55" y="535">霍尔单边沿 T 法测速：</text>
+    <text x="75" y="555">• 每 60° 电角度才更新一次转速 → 量化台阶</text>
+    <text x="75" y="575">• 固定窗口 10ms 延迟 → 速度环响应滞后</text>
+    <text x="75" y="595">• 速度环对台阶过激响应 → Iq 猛冲 → 力矩冲击</text>
+    <text x="75" y="615">• 最终导致自激振荡，低速尤其严重</text>
+  </g>
+  <text x="55" y="650" font-size="12" font-weight="bold" fill="#991b1b">PLL 的解决：</text>
+  <text x="75" y="672" font-size="12" fill="#333">跟踪连续机械角，输出无采样保持台阶的平滑转速，</text>
+  <text x="75" y="690" font-size="12" fill="#333">延迟远小于窗口测速，反馈与真值一致到 0.4–2.4%</text>
+
+  <!-- PLL本质 -->
+  <rect x="570" y="480" width="500" height="210" rx="10" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5"/>
+  <text x="595" y="508" font-size="15" font-weight="bold" fill="#1e40af">PLL 的本质：带闭环跟踪的微分器</text>
+  <g font-size="12" fill="#333">
+    <text x="595" y="535">普通微分：转速 = (角度[k] - 角度[k-1]) / dt</text>
+    <text x="615" y="555" fill="#dc2626">→ 霍尔角度一跳就是 15°，算出来的转速直接炸</text>
+    <text x="595" y="580">PLL 微分：不直接对输入角度微分</text>
+    <text x="615" y="600">→ 让内部积分角度 OutRe 去跟踪输入霍尔角度</text>
+    <text x="615" y="620">→ 跟踪误差经 PI 调节，输出角速度 OutWe</text>
+    <text x="615" y="640" fill="#16a34a">→ 输出的角速度天然平滑，相当于自适应低通</text>
+    <text x="595" y="668" font-weight="bold" fill="#1e40af">硬件角度精度够（如编码器）→ 直接微分即可，不需要 PLL</text>
+    <text x="595" y="688" font-weight="bold" fill="#1e40af">霍尔精度不够（15°分辨率）→ 必须用 PLL 平滑转速</text>
+  </g>
+</svg>
