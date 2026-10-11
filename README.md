@@ -50,10 +50,15 @@
 
 ## 三、硬件平台
 本系统硬件使用 ** 硬石科技** YS-F4Pro开发板 、驱动板以及直流无刷（BLDC）电机。
+
 <img width="1139" height="665" alt="image" src="https://github.com/user-attachments/assets/f54b8087-0b16-472f-9381-cc8442d6242b" />
+<div align="center">
 <img width="629" height="419" alt="image" src="https://github.com/user-attachments/assets/73cef411-d190-4042-bee5-030ac57af112" />
+</div>
 BLDC电机参数如图所示：
+<div align="center">
 <img width="382" height="398" alt="image" src="https://github.com/user-attachments/assets/c26e3004-fc7d-4df9-b572-be4989620c1c" />
+</div>
 硬件原理图见上传文件夹，此处不做展示。
 ### 3.1 硬件清单
 
@@ -72,20 +77,18 @@ BLDC电机参数如图所示：
 
 ### 3.2 引脚连接表
 
-<!-- TODO: 请根据实际硬件接线补充以下引脚号 -->
-
 | MCU引脚 | 功能 | 连接 |
 |---|---|---|
-| <!-- TODO: PA8? --> | TIM8_CH1 / CH1N | U相上下桥驱动 |
-| <!-- TODO: PA9? --> | TIM8_CH2 / CH2N | V相上下桥驱动 |
-| <!-- TODO: PA10? --> | TIM8_CH3 / CH3N | W相上下桥驱动 |
-| <!-- TODO: PA0? --> | ADC_INx | U相电流采样 |
-| <!-- TODO: PA1? --> | ADC_INx | V相电流采样 |
-| <!-- TODO: PA2? --> | ADC_INx | W相电流采样 |
-| <!-- TODO: PA15? --> | TIM5_CH1 | 霍尔A相 |
-| <!-- TODO: PB3? --> | TIM5_CH2 | 霍尔B相 |
-| <!-- TODO: PB4? --> | TIM5_CH3 | 霍尔C相 |
-| <!-- TODO: PA9/PA10? --> | USART1_TX / RX | VOFA+上位机通信 |
+| PI5 / PH13 | TIM8_CH1 / CH1N | U相上桥 / 下桥驱动 |
+| PI6 / PH14 | TIM8_CH2 / CH2N | V相上桥 / 下桥驱动 |
+| PI7 / PH15 | TIM8_CH3 / CH3N | W相上桥 / 下桥驱动 |
+| PA6 | ADC1_IN6 | U相电流采样 |
+| PB0 | ADC1_IN8 | V相电流采样 |
+| PB1 | ADC1_IN9 | W相电流采样 |
+| PH10 | TIM5_CH1 | 霍尔A相 |
+| PH11 | TIM5_CH2 | 霍尔B相 |
+| PH12 | TIM5_CH3 | 霍尔C相 |
+| PB6 / PB7 | USART1_TX / RX | VOFA+上位机通信 |
 
 
 ## 四、软件架构
@@ -122,7 +125,6 @@ ALIGN(0°定位, 1s, Id=0.5A)
 
 ### 4.4 目录结构
 
-```
 STM32-FOC-HALL/
 ├── Algorithm/              # 控制算法核心
 │   ├── Inc/
@@ -158,18 +160,37 @@ STM32-FOC-HALL/
 │   └── Src/
 │       └── StateMachine.c  # ⭐ 主状态机 + 角度助推 + 死区补偿 + 上电标定
 ├── Core/                   # STM32CubeMX生成的初始化代码
-├── Drivers/                # HAL库 + CMSIS
+│   ├── Inc/
+│   │   ├── main.h
+│   │   ├── adc.h / dma.h / gpio.h / tim.h / usart.h
+│   │   ├── stm32f4xx_hal_conf.h
+│   │   └── stm32f4xx_it.h
+│   └── Src/
+│       ├── main.c          # 入口：外设初始化 + 主循环
+│       ├── adc.c           # ADC1注入组配置（三相电流采样）
+│       ├── tim.c           # TIM8 PWM + TIM5霍尔捕获
+│       ├── usart.c         # USART1 + DMA
+│       ├── dma.c / gpio.c
+│       ├── stm32f4xx_hal_msp.c
+│       └── stm32f4xx_it.c # 中断服务函数
+├── Drivers/                # HAL库 + CMSIS（STM32CubeMX自动生成）
+│   ├── STM32F4xx_HAL_Driver/
+│   └── CMSIS/
 ├── MDK-ARM/                # Keil MDK工程文件
-├── _tools/                 # ⭐ 调试工具集（Python）
-│   ├── foc_three_mode_capture.py  # 三模式数据采集（带安全保护）
-│   ├── foc_analysis_report.py      # 数据分析 + 图表生成
-│   └── ... (其他调试脚本)
+│   ├── Base_Project.uvprojx   # Keil工程文件
+│   ├── Base_Project.uvoptx    # 工程选项
+│   └── startup_stm32f407xx.s  # 启动文件
+├── Python/                 # ⭐ 调试工具集（Python）
+│   ├── foc_capture.py            # 三模式数据采集（带安全保护 + 二进制帧相位锁定）
+│   ├── foc_forensic_verify.py    # 取证级调试：固件转速反馈标度独立验证
+│   └── foc_analysis_report.py    # 数据分析 + 可视化图表生成
 ├── _data/                  # 实测数据归档（CSV）
 │   └── three_mode/         # 三模式采集数据
 ├── _analysis/              # 分析报告 + 可视化图表
 │   ├── 三模式实测分析报告.md
 │   └── charts/             # PNG图表
-└── docs/                   # 参考文档
+└── docs/                   # 参考文档（可选）
+```
 
 
 
