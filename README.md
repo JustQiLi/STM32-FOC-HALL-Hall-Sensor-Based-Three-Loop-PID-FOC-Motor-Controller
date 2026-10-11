@@ -67,6 +67,7 @@
 
 ## 二、关键指标
 
+<div align="center">
 
 
 | 指标     | 数值                   | 说明                                      |
@@ -82,6 +83,7 @@
 | 通信协议   | VOFA+ JustFloat      | 921600bps，DMA 非阻塞                       |
 
 
+</div>
 
 ***
 
@@ -115,6 +117,7 @@ BLDC 电机参数如图所示：
 
 ### 3.1 硬件清单
 
+<div align="center">
 
 
 | 部件      | 型号 / 参数                 | 说明                                      |
@@ -129,6 +132,8 @@ BLDC 电机参数如图所示：
 | 电流采样触发  | TIM8\_CC4 上升沿触发 ADC 注入组 | 与 PWM 中心对齐，采样时刻在电流中点                    |
 | 霍尔捕获    | TIM5 输入捕获               | 200kHz 时基 (5µs/tick), 16bit             |
 | 通信      | USART1 + DMA            | 921600bps, VOFA+ JustFloat 协议           |
+
+</div>
 
 ### 3.2 引脚连接表
 
