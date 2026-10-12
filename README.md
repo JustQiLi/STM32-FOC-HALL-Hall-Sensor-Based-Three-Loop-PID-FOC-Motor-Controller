@@ -408,13 +408,16 @@ STM32-FOC-HALL/
 │   ├── foc_capture.py            # 三模式数据采集（带安全保护 + 二进制帧相位锁定）
 │   ├── foc_forensic_verify.py    # 取证级调试：固件转速反馈标度独立验证
 │   └── foc_analysis_report.py    # 数据分析 + 可视化图表生成
+├── Simulink/               # ⭐ MATLAB/Simulink 仿真模型
+│   ├── Zero_SqVInject.slx  # 零序注入 SVPWM 仿真
+│   └── VF.slx              # V/F 开环控制仿真
 ├── _data/                  # 实测数据归档（CSV）
 │   └── three_mode/         # 三模式采集数据
 ├── _analysis/              # 分析报告 + 可视化图表
 │   ├── 三模式实测分析报告.md
 │   └── charts/             # PNG图表
 └── docs/                   # 参考文档（可选）
-```
+
 
 
 
